@@ -1,0 +1,29 @@
+// parse input
+const input = read("input.txt")
+
+const lines = stringSplit(input, "\n")
+make left, right = [], []
+
+do {
+    const split = stringSplit(line, " ")
+    do push(left, stringToInt(split#0))
+    do push(right, stringToInt(split#1))
+} for line in lines
+
+
+/// Part 1
+
+const leftSorted, rightSorted = sort(left), sort(right)
+
+make result = 0
+set result += !- (leftSorted#i - rightSorted#i) for i in range((int)lines)
+
+do sayln(`Part 1: {result}`)
+
+
+/// Part 2
+
+set result = 0
+set result += stringToInt(left#i) * reduce(right, int (a, v, _i) => { return a + (v == left#i)}, 0) for i in range((int)lines)
+
+do sayln(`Part 2: {result}`)
