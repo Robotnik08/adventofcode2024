@@ -24,6 +24,6 @@ do sayln(`Part 1: {result}`)
 /// Part 2
 
 set result = 0
-set result += stringToInt(left#i) * reduce(right, int (a, v, _i) => { return a + (v == left#i)}, 0) for i in range((int)lines)
+set result += left#i * count(right, left#i) for i in range((int)lines)
 
 do sayln(`Part 2: {result}`)
