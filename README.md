@@ -40,3 +40,8 @@ Thats it really. I hope you enjoy the solutions. Feel free to reach out to me if
         - The solution for part 1 was pretty simple compared to last year. I did have an unrelated problem with a bug I found in the Dosato interpreter. I had to fix that before I could continue. The solution was pretty simple.
     - [x] Part 2
         - The solution for part 2 was also pretty simple. All in all I used 2 one liners to solve both problems. I am happy with the solution.
+- [x] Day 2
+    - [x] Part 1
+        - Part 1 was cool.
+    - [x] Part 2
+        - The solution of Part 1 could be reused for Part 2, I used the brute force approach to solve the problem.
