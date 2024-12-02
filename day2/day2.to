@@ -14,7 +14,7 @@ do {
         continue
     }
 
-    if isSafe(splice(*numbers, i, 1)) then {
+    if isSafe(splice(numbers, i, 1)) then {
         set semi_safe++
         break
     } for i in range(numbers)
