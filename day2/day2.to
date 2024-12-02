@@ -3,27 +3,28 @@ const input = read("input.txt")
 
 const lines = stringSplit(input, "\n")
 
-// Part 1
+make safe, semi_safe = 0
 
-do sayln("Part 1: " + reduce(lines, int (acc, line, _i) => {
+do {
     const numbers = stringSplit(line, " ")
     set numbers#i = stringToInt(numbers#i) for i in range(numbers)
-    
-    return isSafe(numbers) ? acc + 1 : acc
-}, 0))
 
-do sayln("Part 2: " + reduce(lines, int (acc, line, _i) => {
-    const numbers = stringSplit(line, " ")
-    set numbers#i = stringToInt(numbers#i) for i in range(numbers)
-    
-    return acc + 1 when isSafe(numbers)
-    return acc + 1 when isSafe(splice(*numbers, i, 1)) for i in range(numbers)
+    if isSafe(numbers) then {
+        set safe, semi_safe++
+        continue
+    }
 
-    return acc
-}, 0))
+    if isSafe(splice(*numbers, i, 1)) then {
+        set semi_safe++
+        break
+    } for i in range(numbers)
+} for line in lines
+
+do sayln(`Part 1: {safe}`)
+do sayln(`Part 2: {semi_safe}`)
 
 define bool isSafe(array numbers) {
-    const increasing = numbers#0 - numbers#1 > 0
+    const bool increasing = numbers#0 - numbers#1 > 0
     do {
         const diff = numbers#i - numbers#(i + 1)
         return false when diff == 0 || (!-diff > 3) || (increasing ? diff < 0 : diff > 0)
