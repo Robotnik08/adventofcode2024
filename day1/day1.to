@@ -16,7 +16,7 @@ do {
 const leftSorted, rightSorted = sort(left), sort(right)
 
 make result = 0
-set result += !- (leftSorted#i - rightSorted#i) for i in range((int)lines)
+set result += !- (leftSorted#i - rightSorted#i) for i in range(lines)
 
 do sayln(`Part 1: {result}`)
 
@@ -24,6 +24,6 @@ do sayln(`Part 1: {result}`)
 /// Part 2
 
 set result = 0
-set result += left#i * count(right, left#i) for i in range((int)lines)
+set result += left#i * count(right, left#i) for i in range(lines)
 
 do sayln(`Part 2: {result}`)
