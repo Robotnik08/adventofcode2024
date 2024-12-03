@@ -1,4 +1,3 @@
-// parse input
 const input = read("input.txt")
 
 make result_all, result_correct = 0

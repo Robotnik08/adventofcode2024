@@ -1,4 +1,3 @@
-// parse input
 const input = read("input.txt")
 
 const lines = stringSplit(input, "\n")
