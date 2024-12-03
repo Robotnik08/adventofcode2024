@@ -1,4 +1,35 @@
 // parse input
 const input = read("input.txt")
 
-const lines = stringSplit(input, "\n")
+make result_all, result_correct = 0
+
+const lines = stringSplit(input, "mul(")
+
+make bool multiply_enabled = true
+do {
+    const allow_multiply = multiply_enabled
+    set multiply_enabled = true when stringContains(line, "do()")
+    set multiply_enabled = false when stringContains(line, "don't()")
+
+    make first_num_length = 0
+    set first_num_length++ while isNumber(line#first_num_length)
+
+    continue when first_num_length == 0 || first_num_length > 3 || line#first_num_length != ","
+
+    make second_num_length = 0
+    set second_num_length++ while isNumber(line#(first_num_length + second_num_length + 1)) catch { continue }
+
+    continue when second_num_length == 0 || second_num_length > 3 || line#(first_num_length + second_num_length + 1) != ")"
+
+    const res = stringToInt(substring(line, 0, first_num_length)) * stringToInt(substring(line, first_num_length + 1, first_num_length + 1 + second_num_length))
+    
+    set result_all += res
+    set result_correct += res when allow_multiply
+} for line in lines
+
+do sayln(`Part 1: {result_all}`) // 157621318
+do sayln(`Part 2: {result_correct}`) // 79845780
+
+define bool isNumber (char c) {
+    return c >= '0' && c <= '9'
+}
