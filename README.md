@@ -45,3 +45,8 @@ Thats it really. I hope you enjoy the solutions. Feel free to reach out to me if
         - Part 1 was cool.
     - [x] Part 2
         - The solution of Part 1 could be reused for Part 2, I used the brute force approach to solve the problem.
+- [x] Day 3
+    - [x] Part 1
+        - Part 1 was pretty easy, my programming language building skills taught me a lot about parsing expressions like that. I found a bug in the stringSplit function, which I took care of, making it an easy solution
+    - [x] Part 2
+        - It was incredebly easy to modify part 1 to also give the answer for part 2, it took me less then 5 minutes
