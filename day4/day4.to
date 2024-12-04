@@ -1,1 +1,51 @@
 const input = read("input.txt")
+
+const lines = stringSplit(input, "\n")
+
+const size = 140
+
+make amount = 0
+
+set amount += stringCount(line, "XMAS") + stringCount(line, "SAMX") for line in lines
+
+do {
+    make line = ""
+    set line += l#i for l in lines
+    set amount += stringCount(line, "XMAS") + stringCount(line, "SAMX")
+    
+    set line = ""
+    set line += lines#(i + j)#j catch { break } for j in range(size)
+    set amount += stringCount(line, "XMAS") + stringCount(line, "SAMX")
+
+    set line = ""
+    do {
+        break when size - j - 1 < 0
+        set line += lines#(i + j)#(size - j - 1)
+    } catch { break } for j in range(size)
+    set amount += stringCount(line, "XMAS") + stringCount(line, "SAMX")
+
+    if i != 0 then {
+        set line = ""
+        set line += lines#j#(i + j) catch { break } for j in range(size)
+        set amount += stringCount(line, "XMAS") + stringCount(line, "SAMX")
+
+        set line = ""
+        do {
+            break when size - i - j - 1 < 0
+            set line += lines#j#(size - i - j - 1)
+        } catch { break } for j in range(size)
+        set amount += stringCount(line, "XMAS") + stringCount(line, "SAMX")
+    }
+
+} for i in range(size)
+
+do sayln(`Part 1: {amount}`)
+
+set amount = 0
+do {
+    continue when lines#i#j != "A"
+    make tl, tr, bl, br = lines#(i-1)#(j-1), lines#(i-1)#(j+1), lines#(i+1)#(j-1), lines#(i+1)#(j+1)
+    set amount++ when ((tl == "M" && br == "S") || (tl == "S" && br == "M")) && ((tr == "M" && bl == "S") || (tr == "S" && bl == "M"))
+} for j in range(1, size - 1) for i in range(1, size - 1)
+
+do sayln(`Part 2: {amount}`)
