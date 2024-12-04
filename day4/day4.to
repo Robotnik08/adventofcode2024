@@ -4,6 +4,7 @@ const lines = stringSplit(input, "\n")
 
 const size = 140
 
+/// Part 1
 make amount = 0
 
 set amount += stringCount(line, "XMAS") + stringCount(line, "SAMX") for line in lines
@@ -34,7 +35,9 @@ do {
 
 do sayln(`Part 1: {amount}`)
 
+/// Part 2
 set amount = 0
+
 do {
     continue when lines#i#j != "A"
     make tl, tr, bl, br = lines#(i-1)#(j-1), lines#(i-1)#(j+1), lines#(i+1)#(j-1), lines#(i+1)#(j+1)
