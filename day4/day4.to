@@ -19,9 +19,9 @@ do {
 
     set line = ""
     do {
-        break when size - j - 1 < 0
+        break when size - j - 1 < 0 || i + j >= size
         set line += lines#(i + j)#(size - j - 1)
-    } catch { break } for j in range(size)
+    } for j in range(size)
     set amount += stringCount(line, "XMAS") + stringCount(line, "SAMX")
 
     if i != 0 then {
@@ -33,7 +33,7 @@ do {
         do {
             break when size - i - j - 1 < 0
             set line += lines#j#(size - i - j - 1)
-        } catch { break } for j in range(size)
+        } for j in range(size)
         set amount += stringCount(line, "XMAS") + stringCount(line, "SAMX")
     }
 
