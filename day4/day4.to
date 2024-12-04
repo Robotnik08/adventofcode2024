@@ -10,33 +10,26 @@ set amount += stringCount(line, "XMAS") + stringCount(line, "SAMX") for line in 
 
 do {
     make line = ""
-    set line += l#i for l in lines
-    set amount += stringCount(line, "XMAS") + stringCount(line, "SAMX")
-    
-    set line = ""
-    set line += lines#(i + j)#j catch { break } for j in range(size)
-    set amount += stringCount(line, "XMAS") + stringCount(line, "SAMX")
 
-    set line = ""
+    set line += l#i for l in lines set line += " "
+    set line += lines#(i + j)#j catch { break } for j in range(size) set line += " "
+
     do {
         break when size - j - 1 < 0 || i + j >= size
         set line += lines#(i + j)#(size - j - 1)
     } for j in range(size)
-    set amount += stringCount(line, "XMAS") + stringCount(line, "SAMX")
+    set line += " "
 
     if i != 0 then {
-        set line = ""
-        set line += lines#j#(i + j) catch { break } for j in range(size)
-        set amount += stringCount(line, "XMAS") + stringCount(line, "SAMX")
+        set line += lines#j#(i + j) catch { break } for j in range(size) set line += " "
 
-        set line = ""
         do {
             break when size - i - j - 1 < 0
             set line += lines#j#(size - i - j - 1)
         } for j in range(size)
-        set amount += stringCount(line, "XMAS") + stringCount(line, "SAMX")
     }
-
+    
+    set amount += stringCount(line, "XMAS") + stringCount(line, "SAMX")
 } for i in range(size)
 
 do sayln(`Part 1: {amount}`)
