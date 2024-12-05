@@ -50,3 +50,13 @@ Thats it really. I hope you enjoy the solutions. Feel free to reach out to me if
         - Part 1 was pretty easy, my programming language building skills taught me a lot about parsing expressions like that. I found a bug in the stringSplit function, which I took care of, making it an easy solution
     - [x] Part 2
         - It was incredebly easy to modify part 1 to also give the answer for part 2, it took me less then 5 minutes
+- [x] Day 4
+    - [x] Part 1
+        - I decided to do the approach of appending all the lines to 1 string, then counting the amount of "XMAS" and "SAMX".
+    - [x] Part 2
+        - Easy solution, just looped through all the strings and at each "A" I check if it's surrounded by the right characters.
+- [x] Day 5
+    - [x] Part 1
+        - I originally used a slow loop, but I switched to checking sort with a map, which was a lot faster.
+    - [x] Part 2
+        - Really simple expansion of part 1, just added a few more checks.
