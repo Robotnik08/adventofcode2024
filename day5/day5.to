@@ -1,0 +1,49 @@
+const input = read("input.txt")
+
+const parts = stringSplit(input, "\n\n")
+
+const rules = stringSplit(parts#0, "\n")
+const messages = stringSplit(parts#1, "\n")
+
+const page_rules = []
+const printed_pages = []
+
+do {
+    const rule = stringSplit(r, "|")
+    do push(page_rules, [stringToInt(rule#0), stringToInt(rule#1)])
+} for r in rules
+
+do push(printed_pages, map(stringSplit(m, ","), long (v, i) => { return stringToInt(v) })) for m in messages
+
+make amount, amount_2 = 0
+
+do {
+
+    make bool correct = true
+    if indexOf(p, pr#0) > indexOf(p, pr#1) then {
+        continue when indexOf(p, pr#0) == -1 || indexOf(p, pr#1) == -1
+        set correct = false
+        break
+    } for pr in page_rules
+
+    set amount += p#(((int)p)/2) when correct
+} for p in printed_pages
+
+do sayln(`Part 1: {amount}`)
+
+const lookup = *([[false] * 100] * 100)
+do {
+    set lookup#(pr#0)#(pr#1) = true
+} for pr in page_rules
+
+do {
+    const sorted = sort(*p, int (a, b) => { 
+        return -1 when lookup#a#b
+        return 1 when lookup#b#a
+        return 0
+    })
+    continue when sorted == p
+    set amount_2 += sorted#(((int)sorted)/2)
+} for p in printed_pages
+
+do sayln(`Part 2: {amount_2}`)
