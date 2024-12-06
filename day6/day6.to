@@ -49,6 +49,7 @@ set amount = 0
 
 do {
     continue when visited#y#x == 0 || (sx == x && sy == y)
+    make old_amount = amount
     set full_map#y#x = true
 
     make d = 2
@@ -60,15 +61,16 @@ do {
             do {
                 set d = (d + 1) % 4
                 set fx, fy = px + directions#d->x, py + directions#d->y
+                if visited#py#px & (1 << d) then {
+                    set amount++ // infinite loop
+                    break
+                }
+
+                set visited#py#px |= 1 << d
             } while full_map#fy#fx
+            break when amount != old_amount
         }
 
-        if visited#py#px & (1 << d) then {
-            set amount++ // infinite loop
-            break
-        }
-
-        set visited#py#px |= 1 << d
         set px, py = fx, fy
     } while px >= 0 && px < size && py >= 0 && py < size
 
