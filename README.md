@@ -60,9 +60,11 @@ Thats it really. I hope you enjoy the solutions. Feel free to reach out to me if
         - I originally used a slow loop, but I switched to checking sort with a map, which was a lot faster.
     - [x] Part 2
         - Really simple expansion of part 1, just added a few more checks.
-- [ ] Day 6
-    - [ ] Part 1
-    - [ ] Part 2
+- [x] Day 6
+    - [x] Part 1
+        - Part 1 was pretty simple
+    - [x] Part 2
+        - This was a fun challenge, eventually I settled with a brute force approach, which worked fine enough. The solve time is not that great, but it works. There must be a different way to solve this.
 - [ ] Day 7
     - [ ] Part 1
     - [ ] Part 2
