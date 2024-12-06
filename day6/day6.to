@@ -1,1 +1,78 @@
 const input = read("input.txt")
+
+const lines = stringSplit(input, "\n")
+
+const full_map = []
+
+make px, py = 0
+make d = 2
+
+do {
+    const row = []
+    do {
+        do push(row, lines#i#j == "#")
+        set px, py = j, i when lines#i#j == "^"
+    } for j in range(lines#i)
+    do push(full_map, row)
+} for i in range(lines)
+
+const sx, sy = px, py
+
+const directions = [
+    { x: 0, y: 1 },
+    { x: -1, y: 0 },
+    { x: 0, y: -1 },
+    { x: 1, y: 0 }
+]
+
+
+const size = (int)lines#0
+const visited = *([[0] * size] * size)
+
+do {
+    make fx, fy = px + directions#d->x, py + directions#d->y
+    if fx >= 0 && fx < size && fy >= 0 && fy < size then {
+        do {
+            set d = (d + 1) % 4
+            set fx, fy = px + directions#d->x, py + directions#d->y
+        } while full_map#fy#fx
+    }
+
+    set visited#py#px |= 1 << d
+    set px, py = fx, fy
+} while px >= 0 && px < size && py >= 0 && py < size
+
+make amount = reduce(visited, int (a, v, _i) => { return a + sum(map(v, int (v, i) => { return v <| 1 })) }, 0)
+
+do sayln(`Part 1: {amount}`)
+set amount = 0
+
+do {
+    continue when visited#y#x == 0 || (sx == x && sy == y)
+    set full_map#y#x = true
+
+    make d = 2
+    make px, py = sx, sy
+    const visited = *([[0] * size] * size)
+    do {
+        make fx, fy = px + directions#d->x, py + directions#d->y
+        if fx >= 0 && fx < size && fy >= 0 && fy < size then {
+            do {
+                set d = (d + 1) % 4
+                set fx, fy = px + directions#d->x, py + directions#d->y
+            } while full_map#fy#fx
+        }
+
+        if visited#py#px & (1 << d) then {
+            set amount++ // infinite loop
+            break
+        }
+
+        set visited#py#px |= 1 << d
+        set px, py = fx, fy
+    } while px >= 0 && px < size && py >= 0 && py < size
+
+    set full_map#y#x = false
+} for x in range(size) for y in range(size)
+
+do sayln(`Part 2: {amount}`)
