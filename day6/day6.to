@@ -19,10 +19,10 @@ do {
 const sx, sy = px, py
 
 const directions = [
-    { x: 0, y: 1 },
-    { x: -1, y: 0 },
-    { x: 0, y: -1 },
-    { x: 1, y: 0 }
+    [0,1],
+    [-1,0],
+    [0,-1],
+    [1,0]
 ]
 
 
@@ -30,11 +30,11 @@ const size = (int)lines#0
 const visited = *([[0] * size] * size)
 
 do {
-    make fx, fy = px + directions#d->x, py + directions#d->y
+    make fx, fy = px + directions#d#0, py + directions#d#1
     if fx >= 0 && fx < size && fy >= 0 && fy < size then {
         do {
             set d = (d + 1) % 4
-            set fx, fy = px + directions#d->x, py + directions#d->y
+            set fx, fy = px + directions#d#0, py + directions#d#1
         } while full_map#fy#fx
     }
 
@@ -55,14 +55,16 @@ do {
     make d = 2
     make px, py = sx, sy
     const visited = *([[0] * size] * size)
+    make a = false
     do {
-        make fx, fy = px + directions#d->x, py + directions#d->y
+        make fx, fy = px + directions#d#0, py + directions#d#1
         if fx >= 0 && fx < size && fy >= 0 && fy < size then {
             do {
                 set d = (d + 1) % 4
-                set fx, fy = px + directions#d->x, py + directions#d->y
+                set fx, fy = px + directions#d#0, py + directions#d#1
                 if visited#py#px & (1 << d) then {
                     set amount++ // infinite loop
+                    set a = true
                     break
                 }
 
@@ -74,7 +76,9 @@ do {
         set px, py = fx, fy
     } while px >= 0 && px < size && py >= 0 && py < size
 
+    do say(a ? '!' : '.')
+
     set full_map#y#x = false
-} for x in range(size) for y in range(size)
+} for x in range(size) then sayln("\nLine " + y) for y in range(size)
 
 do sayln(`Part 2: {amount}`)
