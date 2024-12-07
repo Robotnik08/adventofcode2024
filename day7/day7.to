@@ -20,10 +20,11 @@ define isPossible (target, terms, i, p2) {
 
     return true when isPossible(target / last_num, terms, i - 1, p2) when target % last_num == 0
 
+
+    return true when isPossible(target - last_num, terms, i - 1, p2) when target - last_num >= 0
+    
     if p2 then {
-        make string_target = (string)target
-        set string_target = substring(string_target, (stringLength(string_target) - stringLength((string)last_num)) >| 0, stringLength(string_target) - 1)
-        if string_target == (string)last_num then {
+        if stringEndsWith((string)target, (string)last_num) then {
             const end_index = stringLength((string)target) - stringLength((string)last_num) - 1
             make remaining = end_index < 0 ? "" : substring((string)target, 0, end_index)
             set remaining = remaining != "" ? stringToInt(remaining) : 0
@@ -31,6 +32,5 @@ define isPossible (target, terms, i, p2) {
         }
     }
 
-    return true when isPossible(target - last_num, terms, i - 1, p2) when target-last_num >= 0
     return false
 }
