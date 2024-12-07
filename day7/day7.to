@@ -1,0 +1,36 @@
+const input = read("input.txt")
+const lines = stringSplit(input, "\n")
+
+make amount_1, amount_2 = 0
+do {
+    const equation = stringSplit(l, ": ")
+    const result = stringToInt(equation#0)
+    const terms = map(stringSplit(equation#1, " "), long (v, i) => { return stringToInt(v) })
+
+    set amount_1 += result when isPossible(result, terms, (int)terms - 1, false)
+    set amount_2 += result when isPossible(result, terms, (int)terms - 1, true)
+} for l in lines
+
+do sayln(`Part 1: {amount_1}`)
+do sayln(`Part 2: {amount_2}`)
+
+define isPossible (target, terms, i, p2) {
+    return target == terms#0 when i == 0
+    const last_num = terms#i
+
+    return true when isPossible(target / last_num, terms, i - 1, p2) when target % last_num == 0
+
+    if p2 then {
+        make string_target = (string)target
+        set string_target = substring(string_target, (stringLength(string_target) - stringLength((string)last_num)) >| 0, stringLength(string_target) - 1)
+        if string_target == (string)last_num then {
+            const end_index = stringLength((string)target) - stringLength((string)last_num) - 1
+            make remaining = end_index < 0 ? "" : substring((string)target, 0, end_index)
+            set remaining = remaining != "" ? stringToInt(remaining) : 0
+            return true when isPossible(remaining, terms, i - 1, p2)
+        }
+    }
+
+    return true when isPossible(target - last_num, terms, i - 1, p2) when target-last_num >= 0
+    return false
+}
