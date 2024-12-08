@@ -1,0 +1,35 @@
+const input = read("input.txt")
+const grid = stringSplit(input, "\n")
+
+const n = (int)grid
+
+const typed_set = {}
+if grid#i#j != '.' then {
+    set typed_set->(grid#i#j) = [] when typed_set->(grid#i#j) == null
+    do push(typed_set->(grid#i#j), [j, i])
+} for j in range(n) for i in range(n)
+
+const anti_total, anti_total_2 = {}, {}
+
+do {
+    make i = 1
+    set anti_total_2->(p#0) = true
+    do {
+        make anti = [p#0#0 + (p#0#0 - p#1#0) * i, p#0#1 + (p#0#1 - p#1#1) * i]
+        if anti#0 >= 0 && anti#0 < n && anti#1 >= 0 && anti#1 < n then {
+            if i == 1 then {
+                set anti_total->(anti) = true
+            }
+            set anti_total_2->(anti) = true
+            set i++
+        } else {
+            break
+        }
+    } while true
+} for p in permutations(v, 2) for v in values(typed_set)
+
+make int amount_1 = keys(anti_total)
+make int amount_2 = keys(anti_total_2)
+
+do sayln(`Part 1: {amount_1}`)
+do sayln(`Part 2: {amount_2}`)

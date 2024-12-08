@@ -7,14 +7,14 @@ do {
     const result = stringToInt(equation#0)
     const terms = map(stringSplit(equation#1, " "), long (v, i) => { return stringToInt(v) })
 
-    set amount_1 += result when isPossible(result, terms, (int)terms - 1, false)
+    set amount_1 += result when isPossible(result, terms, (int)terms - 1)
     set amount_2 += result when isPossible(result, terms, (int)terms - 1, true)
 } for l in lines
 
 do sayln(`Part 1: {amount_1}`)
 do sayln(`Part 2: {amount_2}`)
 
-define isPossible (target, terms, i, p2) {
+define bool isPossible (target, terms, i, p2 = false) {
     return target == terms#0 when i == 0
     const last_num = terms#i
 
