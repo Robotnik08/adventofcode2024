@@ -28,9 +28,7 @@ define long p1 () {
     } for i in range(decompressed)
 
     make checksum = 0
-
     set checksum += (decompressed#i - 1) * i when decompressed#i > 0 for i in range(decompressed)
-
     return checksum
 }
 
@@ -40,50 +38,37 @@ define long p2 () {
     make end = n
     do {
         set end--
-        if decompressed#end == 0 then {
-            continue
-        }
+        continue when decompressed#end == 0
+
+        set front++ while decompressed#front
         make end_type = decompressed#end
         make end_size = 0
-        set front++ while decompressed#front != 0
         do {
             set end--
             set end_size++
         } while decompressed#end == end_type
         set end++
-        if front > end then {
-            break
-        }
-        // check if it fits (all zeros)
+        break when front > end
+        
         make fit = false
         make old_front = front
         do {
             set fit = true
-            do {
-                if decompressed#i != 0 then {
-                    set fit = false
-                    break
-                }
+            if decompressed#i then {
+                set fit = false
+                break
             } for i in range(front, front + end_size)
             set front++ when !fit
         } while !fit && front <= end
         if fit then {
-            do {
-                set decompressed#i = end_type
-            } for i in range(front, front + end_size)
-            do {
-                set decompressed#i = 0
-            } for i in range(end, end + end_size)
+            set decompressed#i = end_type for i in range(front, front + end_size)
+            set decompressed#i = 0 for i in range(end, end + end_size)
         }
         set front = old_front
-
-
-    } while front <= end
+    } until front > end
 
     make checksum = 0
-
     set checksum += (decompressed#i - 1) * i when decompressed#i > 0 for i in range(decompressed)
-
     return checksum
 }
 
