@@ -1,0 +1,91 @@
+const input = read("input.txt")
+
+const decompressed = []
+
+make index = 0
+make i = 0
+do {
+    do {
+        do push(decompressed, index % 2 == 0 ? index / 2 + 1 : 0)
+    } for j in range(i - '0')
+    set index++
+} for i in input
+
+const n = (int)decompressed
+
+define long p1 () {
+    const decompressed = *decompressed
+    make front = 0
+    do {
+        make end_index = n - i - 1
+        continue when decompressed#end_index == 0
+        set front++ until decompressed#front == 0 catch {set front--}
+        if front > end_index then {
+            break
+        }
+        set decompressed#front = decompressed#end_index
+        set decompressed#end_index = 0
+    } for i in range(decompressed)
+
+    make checksum = 0
+
+    set checksum += (decompressed#i - 1) * i when decompressed#i > 0 for i in range(decompressed)
+
+    return checksum
+}
+
+define long p2 () {
+    const decompressed = *decompressed
+    make front = 0
+    make end = n
+    do {
+        set end--
+        if decompressed#end == 0 then {
+            continue
+        }
+        make end_type = decompressed#end
+        make end_size = 0
+        set front++ while decompressed#front != 0
+        do {
+            set end--
+            set end_size++
+        } while decompressed#end == end_type
+        set end++
+        if front > end then {
+            break
+        }
+        // check if it fits (all zeros)
+        make fit = false
+        make old_front = front
+        do {
+            set fit = true
+            do {
+                if decompressed#i != 0 then {
+                    set fit = false
+                    break
+                }
+            } for i in range(front, front + end_size)
+            set front++ when !fit
+        } while !fit && front <= end
+        if fit then {
+            do {
+                set decompressed#i = end_type
+            } for i in range(front, front + end_size)
+            do {
+                set decompressed#i = 0
+            } for i in range(end, end + end_size)
+        }
+        set front = old_front
+
+
+    } while front <= end
+
+    make checksum = 0
+
+    set checksum += (decompressed#i - 1) * i when decompressed#i > 0 for i in range(decompressed)
+
+    return checksum
+}
+
+do sayln(`Part 1: {p1()}`)
+do sayln(`Part 2: {p2()}`)
