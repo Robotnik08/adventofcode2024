@@ -1,7 +1,7 @@
 const input = read("input.txt")
 const grid = stringSplit(input, "\n")
 
-const n = (int)grid
+const n = len(grid)
 
 const typed_set = {}
 if grid#i#j != '.' then {

@@ -3,7 +3,6 @@ const input = read("input.txt")
 const decompressed = []
 
 make index = 0
-make i = 0
 do {
     do {
         do push(decompressed, index % 2 == 0 ? index / 2 + 1 : 0)
@@ -11,7 +10,7 @@ do {
     set index++
 } for i in input
 
-const n = (int)decompressed
+const n = len(decompressed)
 
 define long p1 () {
     const decompressed = *decompressed

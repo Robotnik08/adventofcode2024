@@ -16,9 +16,9 @@ do {
     const sorted = sort(*p, int (a, b) => { return lookup#a#b ? -1 : 0 })
 
     if sorted == p then {
-        set amount += p#(((int)p)/2)
+        set amount += p#((len(p))/2)
     } else {
-        set amount_2 += sorted#(((int)sorted)/2)
+        set amount_2 += sorted#((len(sorted))/2)
     }
 } for p in printed_pages
 

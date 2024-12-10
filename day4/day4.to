@@ -2,7 +2,7 @@ const input = read("input.txt")
 
 const lines = stringSplit(input, "\n")
 
-const size = 140
+const size = len(lines)
 
 /// Part 1
 make amount = 0
