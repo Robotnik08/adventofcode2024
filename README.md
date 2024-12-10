@@ -65,18 +65,26 @@ Thats it really. I hope you enjoy the solutions. Feel free to reach out to me if
         - Part 1 was pretty simple
     - [x] Part 2
         - This was a fun challenge, eventually I settled with a brute force approach, which worked fine enough. The solve time is not that great, but it works. There must be a different way to solve this.
-- [ ] Day 7
-    - [ ] Part 1
-    - [ ] Part 2
-- [ ] Day 8
-    - [ ] Part 1
-    - [ ] Part 2
-- [ ] Day 9
-    - [ ] Part 1
-    - [ ] Part 2
-- [ ] Day 10
-    - [ ] Part 1
-    - [ ] Part 2
+- [x] Day 7
+    - [x] Part 1
+        - Simple Binary search
+    - [x] Part 2
+        - Expanded on part 1, and added a few more checks.
+- [x] Day 8
+    - [x] Part 1
+        - Using permutations, we solve the problem
+    - [x] Part 2
+        - Really easy expansion of part 1.
+- [x] Day 9
+    - [x] Part 1
+        - The solution was pretty simple, It was a bruteforce approach, but it worked.
+    - [x] Part 2
+        - The Solution is rough, this brute force takes over 2 minutes to solve, Might rewrite this in the future.
+- [x] Day 10
+    - [x] Part 1
+        - Super easy, misread and accidentally solved part 2 first.
+    - [x] Part 2
+        - I could use the previous solution to solve this. Both solutions fit under 20 lines of code.
 - [ ] Day 11
     - [ ] Part 1
     - [ ] Part 2
