@@ -28,8 +28,5 @@ do {
     } while true
 } for p in permutations(v, 2) for v in values(typed_set)
 
-make int amount_1 = keys(anti_total)
-make int amount_2 = keys(anti_total_2)
-
-do sayln(`Part 1: {amount_1}`)
-do sayln(`Part 2: {amount_2}`)
+do sayln(`Part 1: {len(keys(anti_total))}`)
+do sayln(`Part 2: {len(keys(anti_total_2))}`)

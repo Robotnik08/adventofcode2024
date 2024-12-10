@@ -23,8 +23,8 @@ define bool isPossible (target, terms, i, p2 = false) {
     
     if p2 then {
         if stringEndsWith((string)target, (string)last_num) then {
-            const end_index = stringLength((string)target) - stringLength((string)last_num) - 1
-            make remaining = end_index < 0 ? 0 : stringToInt(substring((string)target, 0, end_index))
+            const end_index = len((string)target) - len((string)last_num) - 1
+            make remaining = end_index < 0 ? 0 : len(substring((string)target, 0, end_index))
             return true when isPossible(remaining, terms, i - 1, p2)
         }
     }

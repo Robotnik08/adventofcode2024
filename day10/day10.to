@@ -3,25 +3,19 @@ const lines = stringSplit(input, "\n")
 
 const n = (int)lines
 
-const route_set = {}
-make amount_distinct = 0
+const routes = []
+do walk(x, y, x, y, '0') when lines#y#x == '0' for x in range(n) for y in range(n)
 
-set amount_distinct += walk(x, y, x, y, '0') when lines#y#x == '0' for x in range(n) for y in range(n)
+do sayln(`Part 1: {len(removeDuplicates(routes))}`)
+do sayln(`Part 2: {len(routes)}`)
 
-make int amount_route = entries(route_set)
-
-do sayln(`Part 1: {amount_route}`)
-do sayln(`Part 2: {amount_distinct}`)
-
-define int walk (sx, sy, x, y, num) {
+define walk (sx, sy, x, y, num) {
     if num == '9' then {
-        set route_set->`{sx} {sy} {x} {y}` = true
-        return 1
+        do push(routes, [sx, sy, x, y])
+        return
     }
-    make s = 0
-    set s += walk(sx, sy, x - 1, y, num + 1) when lines#y#(x - 1) == num + 1 when x > 0
-    set s += walk(sx, sy, x + 1, y, num + 1) when lines#y#(x + 1) == num + 1 when x < n - 1
-    set s += walk(sx, sy, x, y - 1, num + 1) when lines#(y - 1)#x == num + 1 when y > 0
-    set s += walk(sx, sy, x, y + 1, num + 1) when lines#(y + 1)#x == num + 1 when y < n - 1
-    return s
+    do walk(sx, sy, x - 1, y, num + 1) when lines#y#(x - 1) == num + 1 when x > 0
+    do walk(sx, sy, x + 1, y, num + 1) when lines#y#(x + 1) == num + 1 when x < n - 1
+    do walk(sx, sy, x, y - 1, num + 1) when lines#(y - 1)#x == num + 1 when y > 0
+    do walk(sx, sy, x, y + 1, num + 1) when lines#(y + 1)#x == num + 1 when y < n - 1
 }
