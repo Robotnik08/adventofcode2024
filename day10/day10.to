@@ -7,10 +7,8 @@ const routes = []
 do walk(x, y, x, y, '0') when lines#y#x == '0' for x in range(n) for y in range(n)
 
 define walk (sx, sy, x, y, num) {
-    if num == '9' then {
-        do push(routes, [sx, sy, x, y])
-        return
-    }
+    return push(routes, [sx, sy, x, y]) when num == '9'
+    
     do walk(sx, sy, x - 1, y, num + 1) when lines#y#(x - 1) == num + 1 when x > 0
     do walk(sx, sy, x + 1, y, num + 1) when lines#y#(x + 1) == num + 1 when x < n - 1
     do walk(sx, sy, x, y - 1, num + 1) when lines#(y - 1)#x == num + 1 when y > 0
