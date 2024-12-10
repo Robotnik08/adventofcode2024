@@ -27,15 +27,12 @@ define long p1 () {
         set decompressed#end_index = 0
     } for i in range(decompressed)
 
-    make checksum = 0
-    set checksum += (decompressed#i - 1) * i when decompressed#i > 0 for i in range(decompressed)
-    return checksum
+    return reduce(decompressed, long (a, v, i) => { return a + (v ? (v - 1) * i : 0) }, 0)
 }
 
 define long p2 () {
     const decompressed = *decompressed
-    make front = 0
-    make end = n
+    make front, end = 0, n
     do {
         set end--
         continue when decompressed#end == 0
@@ -49,27 +46,24 @@ define long p2 () {
         } while decompressed#end == end_type
         set end++
         break when front > end
-        
+
         make fit = false
-        make old_front = front
+        make new_front = front
         do {
             set fit = true
             if decompressed#i then {
                 set fit = false
                 break
-            } for i in range(front, front + end_size)
-            set front++ when !fit
-        } while !fit && front <= end
+            } for i in range(new_front, new_front + end_size)
+            set new_front++ when !fit
+        } while !fit && new_front <= end
         if fit then {
-            set decompressed#i = end_type for i in range(front, front + end_size)
+            set decompressed#i = end_type for i in range(new_front, new_front + end_size)
             set decompressed#i = 0 for i in range(end, end + end_size)
         }
-        set front = old_front
     } until front > end
 
-    make checksum = 0
-    set checksum += (decompressed#i - 1) * i when decompressed#i > 0 for i in range(decompressed)
-    return checksum
+    return reduce(decompressed, long (a, v, i) => { return a + (v ? (v - 1) * i : 0) }, 0)
 }
 
 do sayln(`Part 1: {p1()}`)
