@@ -1,13 +1,10 @@
 const input = read("input.txt")
 const lines = stringSplit(input, "\n")
 
-const n = (int)lines
+const n = len(lines)
 
 const routes = []
 do walk(x, y, x, y, '0') when lines#y#x == '0' for x in range(n) for y in range(n)
-
-do sayln(`Part 1: {len(removeDuplicates(routes))}`)
-do sayln(`Part 2: {len(routes)}`)
 
 define walk (sx, sy, x, y, num) {
     if num == '9' then {
@@ -19,3 +16,6 @@ define walk (sx, sy, x, y, num) {
     do walk(sx, sy, x, y - 1, num + 1) when lines#(y - 1)#x == num + 1 when y > 0
     do walk(sx, sy, x, y + 1, num + 1) when lines#(y + 1)#x == num + 1 when y < n - 1
 }
+
+do sayln(`Part 1: {len(removeDuplicates(routes))}`)
+do sayln(`Part 2: {len(routes)}`)
