@@ -2,7 +2,6 @@ const input = read("input.txt")
 const lines = stringSplit(input, "\n")
 
 const n = len(lines)
-
 const routes = []
 do walk(x, y, x, y, '0') when lines#y#x == '0' for x in range(n) for y in range(n)
 
