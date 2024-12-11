@@ -13,8 +13,9 @@ define blink () {
             set new_stones->1 += count
         } else if countDigits(stone) % 2 == 0 then {
             make half = countDigits(stone) / 2
-            set new_stones->(stone / 10 ** half) += count
-            set new_stones->(stone % 10 ** half) += count
+            make left, right = stone / 10 ** half, stone % 10 ** half
+            set new_stones->(left) += count
+            set new_stones->(right) += count
         } else {
             set new_stones->(stone * 2024) += count
         }
