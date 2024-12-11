@@ -1,5 +1,4 @@
 const input = read("input.txt")
-
 const nums = map(stringSplit(input, " "), int (v, i) => { return stringToInt(v) })
 
 make stones = {}
@@ -7,7 +6,6 @@ set stones->(num) = 1 for num in nums // theres 1 of each stone initially
 
 define blink () {
     const new_stones = {}
-
     do {
         make stone, count = stringToInt(s#0), s#1
 
@@ -21,7 +19,6 @@ define blink () {
             set new_stones->(stone * 2024) = ((long)new_stones->(stone * 2024)) + count
         }
     } for s in entries(stones)
-
     set stones = new_stones
 }
 
