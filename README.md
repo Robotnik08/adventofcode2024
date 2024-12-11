@@ -85,9 +85,11 @@ Thats it really. I hope you enjoy the solutions. Feel free to reach out to me if
         - Super easy, misread and accidentally solved part 2 first.
     - [x] Part 2
         - I could use the previous solution to solve this. Both solutions fit under 20 lines of code.
-- [ ] Day 11
-    - [ ] Part 1
-    - [ ] Part 2
+- [x] Day 11
+    - [x] Part 1
+        - Really simple brute force approach
+    - [x] Part 2
+        - My bruteforce approach wouldn't work for part 2, I need to come up with a different solution. Ended up keeping a dictionairy of all the duplicates, instead of checking the whole list and wasting time checking the same thing multiple times.
 - [ ] Day 12
     - [ ] Part 1
     - [ ] Part 2
