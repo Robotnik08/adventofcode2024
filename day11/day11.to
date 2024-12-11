@@ -11,9 +11,7 @@ define blink () {
     do {
         make stone, count = stringToInt(s#0), s#1
 
-        if count == 0 then {
-            continue
-        }
+        continue when count == 0
 
         if stone == 0 then {
             do add_stone(new_stones, count, 1)
@@ -23,10 +21,8 @@ define blink () {
         make digit_count = countDigits(stone)
         if digit_count % 2 == 0 then {
             make half = digit_count / 2
-            make first_half = stone / 10 ** half
-            make second_half = stone % 10 ** half
-            do add_stone(new_stones, count, first_half)
-            do add_stone(new_stones, count, second_half)
+            do add_stone(new_stones, count, stone / 10 ** half)
+            do add_stone(new_stones, count, stone % 10 ** half)
             continue
         }
 
