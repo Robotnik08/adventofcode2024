@@ -1,0 +1,61 @@
+const input = read("input.txt")
+
+const nums = map(stringSplit(input, " "), int (v, i) => { return stringToInt(v) })
+
+make stones = {}
+set stones->(num) = 1 for num in nums // theres 1 of each stone initially
+
+define blink () {
+    const new_stones = {}
+
+    do {
+        make stone, count = stringToInt(s#0), s#1
+
+        if count == 0 then {
+            continue
+        }
+
+        if stone == 0 then {
+            do add_stone(new_stones, count, 1)
+            continue
+        }
+
+        if get_digit_amount(stone) % 2 == 0 then {
+            make half = get_digit_amount(stone) / 2
+            make first_half = stone / 10 ** half
+            make second_half = stone % 10 ** half
+            do add_stone(new_stones, count, first_half)
+            do add_stone(new_stones, count, second_half)
+            continue
+        }
+
+        do add_stone(new_stones, count, stone * 2024)
+    } for s in entries(stones)
+
+    set stones = new_stones
+}
+
+do {
+    do blink()
+    if i == 24 then sayln(`Part 1: {sum(values(stones))}`)
+    if i == 74 then sayln(`Part 2: {sum(values(stones))}`)
+} for i in range(75)
+
+define add_stone (object stones, long amount, long stone) {
+    if stones->(stone) == 0 then {
+        set stones->(stone) = amount
+    } else {
+        set stones->(stone) += amount
+    }
+}
+
+define get_digit_amount (long num) {
+    make amount = 0
+
+    do {
+        set amount++
+        set num /= 10
+    } while num
+
+    return amount
+}   
