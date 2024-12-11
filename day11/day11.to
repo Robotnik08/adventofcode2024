@@ -7,16 +7,16 @@ set stones->(num) = 1 for num in nums // theres 1 of each stone initially
 define blink () {
     const new_stones = {}
     do {
-        make stone, count = stringToInt(s#0), s#1
+        make stone, count = s#0, s#1
 
         if stone == 0 then {
-            set new_stones->1 = ((long)new_stones->1) + count
+            set new_stones->1 += count
         } else if countDigits(stone) % 2 == 0 then {
             make half = countDigits(stone) / 2
-            set new_stones->(stone / 10 ** half) = ((long)new_stones->(stone / 10 ** half)) + count
-            set new_stones->(stone % 10 ** half) = ((long)new_stones->(stone % 10 ** half)) + count
+            set new_stones->(stone / 10 ** half) += count
+            set new_stones->(stone % 10 ** half) += count
         } else {
-            set new_stones->(stone * 2024) = ((long)new_stones->(stone * 2024)) + count
+            set new_stones->(stone * 2024) += count
         }
     } for s in entries(stones)
     set stones = new_stones
