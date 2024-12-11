@@ -4,7 +4,6 @@ const nums = map(stringSplit(input, " "), int (v, i) => { return stringToInt(v) 
 
 make stones = {}
 set stones->(num) = 1 for num in nums // theres 1 of each stone initially
-const digid_amount_cache = {} 
 
 define blink () {
     const new_stones = {}
@@ -21,8 +20,9 @@ define blink () {
             continue
         }
 
-        if get_digit_amount(stone) % 2 == 0 then {
-            make half = get_digit_amount(stone) / 2
+        make digit_count = countDigits(stone)
+        if digit_count % 2 == 0 then {
+            make half = digit_count / 2
             make first_half = stone / 10 ** half
             make second_half = stone % 10 ** half
             do add_stone(new_stones, count, first_half)
@@ -43,22 +43,9 @@ do {
 } for i in range(75)
 
 define add_stone (object stones, long amount, long stone) {
-    if stones->(stone) == 0 then {
-        set stones->(stone) = amount
-    } else {
+    if stones->(stone) then {
         set stones->(stone) += amount
+    } else {
+        set stones->(stone) = amount
     }
-}
-
-define get_digit_amount (long num) {
-    return digid_amount_cache->(num) when digid_amount_cache->(num)
-    make amount = 0
-
-    do {
-        set amount++
-        set num /= 10
-    } while num
-
-    set digid_amount_cache->(num) = amount
-    return amount
 }
