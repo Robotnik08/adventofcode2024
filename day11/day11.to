@@ -4,6 +4,7 @@ const nums = map(stringSplit(input, " "), int (v, i) => { return stringToInt(v) 
 
 make stones = {}
 set stones->(num) = 1 for num in nums // theres 1 of each stone initially
+const digid_amount_cache = {} 
 
 define blink () {
     const new_stones = {}
@@ -50,6 +51,7 @@ define add_stone (object stones, long amount, long stone) {
 }
 
 define get_digit_amount (long num) {
+    return digid_amount_cache->(num) when digid_amount_cache->(num)
     make amount = 0
 
     do {
@@ -57,5 +59,6 @@ define get_digit_amount (long num) {
         set num /= 10
     } while num
 
+    set digid_amount_cache->(num) = amount
     return amount
-}   
+}
