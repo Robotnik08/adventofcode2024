@@ -11,22 +11,15 @@ define blink () {
     do {
         make stone, count = stringToInt(s#0), s#1
 
-        continue when count == 0
-
         if stone == 0 then {
-            do add_stone(new_stones, count, 1)
-            continue
+            set new_stones->1 = ((long)new_stones->1) + count
+        } else if countDigits(stone) % 2 == 0 then {
+            make half = countDigits(stone) / 2
+            set new_stones->(stone / 10 ** half) = ((long)new_stones->(stone / 10 ** half)) + count
+            set new_stones->(stone % 10 ** half) = ((long)new_stones->(stone % 10 ** half)) + count
+        } else {
+            set new_stones->(stone * 2024) = ((long)new_stones->(stone * 2024)) + count
         }
-
-        make digit_count = countDigits(stone)
-        if digit_count % 2 == 0 then {
-            make half = digit_count / 2
-            do add_stone(new_stones, count, stone / 10 ** half)
-            do add_stone(new_stones, count, stone % 10 ** half)
-            continue
-        }
-
-        do add_stone(new_stones, count, stone * 2024)
     } for s in entries(stones)
 
     set stones = new_stones
@@ -37,11 +30,3 @@ do {
     if i == 24 then sayln(`Part 1: {sum(values(stones))}`)
     if i == 74 then sayln(`Part 2: {sum(values(stones))}`)
 } for i in range(75)
-
-define add_stone (object stones, long amount, long stone) {
-    if stones->(stone) then {
-        set stones->(stone) += amount
-    } else {
-        set stones->(stone) = amount
-    }
-}
