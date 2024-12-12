@@ -19,7 +19,6 @@ set amount_1 += areas#i * perimiters#i for i in range(len(areas))
 make amount_2 = 0
 set amount_2 += areas#i * corners#i for i in range(len(areas))
 
-
 do sayln(`Part 1: {amount_1}`)
 do sayln(`Part 2: {amount_2}`)
 
@@ -35,81 +34,36 @@ define long flood_fill (x, y, t) {
     }
     set corners#plot_id += check_corners(x, y, t)
     set explored#y#x = true
-    make area = 1
-    set area += flood_fill(x - 1, y, t)
-    set area += flood_fill(x + 1, y, t)
-    set area += flood_fill(x, y - 1, t)
-    set area += flood_fill(x, y + 1, t)
-    return area
+    return 1 + flood_fill(x - 1, y, t) + flood_fill(x + 1, y, t) + flood_fill(x, y - 1, t) + flood_fill(x, y + 1, t)
 }
 
 define bool in_bounds (x, y) {
     return x >= 0 && x < n && y >= 0 && y < n
 }
 
-
 define long check_corners (x, y, t) {
     make corners = 0
 
     make tl, pt, tr, pl, pr, bl, pb, br = false
-    // Check top
-    if in_bounds(x, y - 1) then {
-        if lines#(y - 1)#x == t then {
-            set pt = true
-        }
-    }
-    // Check bottom
-    if in_bounds(x, y + 1) then {
-        if lines#(y + 1)#x == t then {
-            set pb = true
-        }
-    }
-    // Check left
-    if in_bounds(x - 1, y) then {
-        if lines#y#(x - 1) == t then {
-            set pl = true
-        }
-    }
-    // Check right
-    if in_bounds(x + 1, y) then {
-        if lines#y#(x + 1) == t then {
-            set pr = true
-        }
-    }
-    // Check top left
-    if in_bounds(x - 1, y - 1) then {
-        if lines#(y - 1)#(x - 1) == t then {
-            set tl = true
-        }
-    }
-    // Check top right
-    if in_bounds(x + 1, y - 1) then {
-        if lines#(y - 1)#(x + 1) == t then {
-            set tr = true
-        }
-    }
-    // Check bottom left
-    if in_bounds(x - 1, y + 1) then {
-        if lines#(y + 1)#(x - 1) == t then {
-            set bl = true
-        }
-    }
-    // Check bottom right
-    if in_bounds(x + 1, y + 1) then {
-        if lines#(y + 1)#(x + 1) == t then {
-            set br = true
-        }
-    }
 
-    set corners++ when !pt && !pl
-    set corners++ when !pt && !pr
-    set corners++ when !pb && !pl
-    set corners++ when !pb && !pr
+    set pt = lines#(y - 1)#x == t when in_bounds(x, y - 1)              // top
+    set pb = lines#(y + 1)#x == t when in_bounds(x, y + 1)              // bottom
+    set pl = lines#y#(x - 1) == t when in_bounds(x - 1, y)              // left
+    set pr = lines#y#(x + 1) == t when in_bounds(x + 1, y)              // right
+    set tl = lines#(y - 1)#(x - 1) == t when in_bounds(x - 1, y - 1)    // top left
+    set tr = lines#(y - 1)#(x + 1) == t when in_bounds(x + 1, y - 1)    // top right
+    set bl = lines#(y + 1)#(x - 1) == t when in_bounds(x - 1, y + 1)    // bottom left
+    set br = lines#(y + 1)#(x + 1) == t when in_bounds(x + 1, y + 1)    // bottom right
 
-    set corners++ when !tl && pl && pt
-    set corners++ when !tr && pr && pt
-    set corners++ when !bl && pl && pb
-    set corners++ when !br && pr && pb
+    set corners++ when !pt && !pl                                       // top left corner
+    set corners++ when !pt && !pr                                       // top right corner
+    set corners++ when !pb && !pl                                       // bottom left corner
+    set corners++ when !pb && !pr                                       // bottom right corner
+
+    set corners++ when !tl && pl && pt                                  // top left corner inwards
+    set corners++ when !tr && pr && pt                                  // top right corner inwards
+    set corners++ when !bl && pl && pb                                  // bottom left corner inwards
+    set corners++ when !br && pr && pb                                  // bottom right corner inwards
 
     return corners
 }
