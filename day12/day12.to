@@ -1,1 +1,115 @@
 const input = read("input.txt")
+const lines = stringSplit(input, "\n")
+
+const n = len(lines)
+const explored = *([[false] * n] * n)
+make plot_id = 0
+const areas, perimiters, corners = [], [], []
+do {
+    continue when explored#y#x
+    do push(corners, 0)
+    do push(perimiters, 0)
+    do push(areas, flood_fill(x, y, lines#y#x))
+
+    set plot_id++
+} for x in range(n) for y in range(n)
+
+make amount_1 = 0
+set amount_1 += areas#i * perimiters#i for i in range(len(areas))
+make amount_2 = 0
+set amount_2 += areas#i * corners#i for i in range(len(areas))
+
+
+do sayln(`Part 1: {amount_1}`)
+do sayln(`Part 2: {amount_2}`)
+
+define long flood_fill (x, y, t) {
+    if !(in_bounds(x, y)) then {
+        set perimiters#plot_id++
+        return 0
+    } else if lines#y#x != t then {
+        set perimiters#plot_id++
+        return 0
+    } else if explored#y#x then {
+        return 0
+    }
+    set corners#plot_id += check_corners(x, y, t)
+    set explored#y#x = true
+    make area = 1
+    set area += flood_fill(x - 1, y, t)
+    set area += flood_fill(x + 1, y, t)
+    set area += flood_fill(x, y - 1, t)
+    set area += flood_fill(x, y + 1, t)
+    return area
+}
+
+define bool in_bounds (x, y) {
+    return x >= 0 && x < n && y >= 0 && y < n
+}
+
+
+define long check_corners (x, y, t) {
+    make corners = 0
+
+    make tl, pt, tr, pl, pr, bl, pb, br = false
+    // Check top
+    if in_bounds(x, y - 1) then {
+        if lines#(y - 1)#x == t then {
+            set pt = true
+        }
+    }
+    // Check bottom
+    if in_bounds(x, y + 1) then {
+        if lines#(y + 1)#x == t then {
+            set pb = true
+        }
+    }
+    // Check left
+    if in_bounds(x - 1, y) then {
+        if lines#y#(x - 1) == t then {
+            set pl = true
+        }
+    }
+    // Check right
+    if in_bounds(x + 1, y) then {
+        if lines#y#(x + 1) == t then {
+            set pr = true
+        }
+    }
+    // Check top left
+    if in_bounds(x - 1, y - 1) then {
+        if lines#(y - 1)#(x - 1) == t then {
+            set tl = true
+        }
+    }
+    // Check top right
+    if in_bounds(x + 1, y - 1) then {
+        if lines#(y - 1)#(x + 1) == t then {
+            set tr = true
+        }
+    }
+    // Check bottom left
+    if in_bounds(x - 1, y + 1) then {
+        if lines#(y + 1)#(x - 1) == t then {
+            set bl = true
+        }
+    }
+    // Check bottom right
+    if in_bounds(x + 1, y + 1) then {
+        if lines#(y + 1)#(x + 1) == t then {
+            set br = true
+        }
+    }
+
+    set corners++ when !pt && !pl
+    set corners++ when !pt && !pr
+    set corners++ when !pb && !pl
+    set corners++ when !pb && !pr
+
+    set corners++ when !tl && pl && pt
+    set corners++ when !tr && pr && pt
+    set corners++ when !bl && pl && pb
+    set corners++ when !br && pr && pb
+
+    return corners
+}
