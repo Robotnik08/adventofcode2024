@@ -15,9 +15,9 @@ do {
 } for x in range(n) for y in range(n)
 
 make amount_1 = 0
-set amount_1 += areas#i * perimiters#i for i in range(len(areas))
+set amount_1 += areas#i * perimiters#i for i in range(areas)
 make amount_2 = 0
-set amount_2 += areas#i * corners#i for i in range(len(areas))
+set amount_2 += areas#i * corners#i for i in range(areas)
 
 do sayln(`Part 1: {amount_1}`)
 do sayln(`Part 2: {amount_2}`)
