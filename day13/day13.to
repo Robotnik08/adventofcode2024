@@ -9,7 +9,7 @@ do {
     make a_x, a_y = stringSplit(a, "X+")#1, stringSplit(a, "Y+")#1
     make b_x, b_y = stringSplit(b, "X+")#1, stringSplit(b, "Y+")#1
     make p_x, p_y = stringSplit(res, "X=")#1, stringSplit(res, "Y=")#1
-    set a_x, a_y, b_x, b_y, p_x, p_y |>= stringToInt(a_x), stringToInt(a_y), stringToInt(b_x), stringToInt(b_y), stringToInt(p_x), stringToInt(p_y)
+    set a_x, a_y, b_x, b_y, p_x, p_y = stringToInt(a_x), stringToInt(a_y), stringToInt(b_x), stringToInt(b_y), stringToInt(p_x), stringToInt(p_y)
 
     set total_1 += solve_machine(a_x, a_y, b_x, b_y, p_x, p_y)
     set total_2 += solve_machine(a_x, a_y, b_x, b_y, p_x, p_y, 10**13)
