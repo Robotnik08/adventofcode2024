@@ -1,0 +1,30 @@
+const input = read("input.txt")
+
+const machines = stringSplit(input, "\n\n")
+
+make total_1, total_2 = 0
+do {
+    const parts = stringSplit(machine, "\n")
+    make a, b, res = parts#0, parts#1, parts#2
+    make a_x, a_y = stringSplit(a, "X+")#1, stringSplit(a, "Y+")#1
+    make b_x, b_y = stringSplit(b, "X+")#1, stringSplit(b, "Y+")#1
+    make p_x, p_y = stringSplit(res, "X=")#1, stringSplit(res, "Y=")#1
+    set a_x, a_y, b_x, b_y, p_x, p_y |>= stringToInt(a_x), stringToInt(a_y), stringToInt(b_x), stringToInt(b_y), stringToInt(p_x), stringToInt(p_y)
+
+    set total_1 += solve_machine(a_x, a_y, b_x, b_y, p_x, p_y)
+    set total_2 += solve_machine(a_x, a_y, b_x, b_y, p_x, p_y, 10**13)
+} for machine in machines
+
+do sayln(`Part 1: {total_1}`)
+do sayln(`Part 2: {total_2}`)
+
+define solve_machine(a_x, a_y, b_x, b_y, p_x, p_y, offset = 0) {
+    set p_x, p_y += offset
+    make determinant = a_x * b_y - a_y * b_x
+
+    make m_x = p_x * b_y - p_y * b_x
+    make m_y = a_x * p_y - a_y * p_x
+
+    return 0 when m_x % determinant != 0 || m_y % determinant != 0
+    return 3 * m_x / determinant + m_y / determinant
+}
