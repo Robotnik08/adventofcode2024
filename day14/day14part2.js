@@ -37,6 +37,17 @@ for (let i of instructions) {
     robots.push(new Robot(i));
 }
 
+
+// Make out directory if it doesn't exist
+if (!fs.existsSync('out')) {
+    fs.mkdirSync('out');
+} else {
+    // Clear out directory
+    fs.readdirSync('out').forEach(file => {
+        fs.unlinkSync(`out/${file}`);
+    });
+}
+
 for (let i = 0; i < 10000; i++) {
     for (let r of robots) {
         r.move();   
