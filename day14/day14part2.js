@@ -76,5 +76,3 @@ for (let r of robots) {
     if (x < Math.floor(width / 2) && y > Math.floor(height / 2)) q3++;
     if (x > Math.floor(width / 2) && y > Math.floor(height / 2)) q4++;
 }
-
-console.log(`Part 1: ${q1 * q2 * q3 * q4}`);
