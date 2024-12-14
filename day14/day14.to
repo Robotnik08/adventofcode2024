@@ -1,0 +1,39 @@
+const input = read("input.txt")
+const instructions = stringSplit(input, "\n")
+
+const width, height = 101, 103
+
+class Robot (robot_string) {
+    const parts = stringSplit(robot_string, " ")
+    const position_str, velocity_str = substring(parts#0, 2, parts#0 - 1), substring(parts#1, 2, parts#1 - 1)
+    const p, v = stringSplit(position_str, ","), stringSplit(velocity_str, ",")
+    set self->x, self->y, self->vx, self->vy = stringToInt(p#0), stringToInt(p#1), stringToInt(v#0), stringToInt(v#1)
+    implement move() {
+        set self->x += self->vx
+        set self->y += self->vy
+
+        set self->x += width when self->x < 0
+        set self->y += height when self->y < 0
+
+        set self->x %= width
+        set self->y %= height
+    }
+}
+
+const robots = []
+
+do push(robots, Robot(i)) for i in instructions
+
+do r->move() for r in robots for range(100)
+
+make q1, q2, q3, q4 = 0
+
+do {
+    make x, y = r->x, r->y
+    set q1++ when x < (width/2) && y < (height/2)
+    set q2++ when x > (width/2) && y < (height/2)
+    set q3++ when x < (width/2) && y > (height/2)
+    set q4++ when x > (width/2) && y > (height/2)
+} for r in robots
+
+do sayln(`Part 1: {q1 * q2 * q3 * q4}`)
