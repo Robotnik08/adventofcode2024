@@ -8,6 +8,7 @@ class Robot (robot_string) {
     const position_str, velocity_str = substring(parts#0, 2, parts#0 - 1), substring(parts#1, 2, parts#1 - 1)
     const p, v = stringSplit(position_str, ","), stringSplit(velocity_str, ",")
     set self->x, self->y, self->vx, self->vy = stringToInt(p#0), stringToInt(p#1), stringToInt(v#0), stringToInt(v#1)
+
     implement move() {
         set self->x += self->vx
         set self->y += self->vy
