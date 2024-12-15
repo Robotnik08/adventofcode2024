@@ -9,83 +9,119 @@ const ic = len(instructions)
 make grid = stringSplit(parts#0, "\n")
 const n = len(grid)
 
-do sayln(`Part 1: {solveBoard(*grid, instructions)}`)
+make push_cache = {}
 
+do sayln(`Part 1: {solveBoard(*grid, instructions, n, n)}`)
+do sayln(`Part 2: {solveBoard(stretchBoard(grid), instructions, n*2, n)}`)
 
-define solveBoard (grid, instructions) {
+define stretchBoard (grid) {
+    make new_grid = []
+    do {
+        make row = ""
+        do {
+            if c == '@' then {
+                set row += '@'
+                set row += '.'
+            } else if c == 'O' then {
+                set row += '['
+                set row += ']'
+            } else {
+                set row += c
+                set row += c
+            }
+        } for c in r
+        do push(new_grid, row)
+    } for r in grid
+    return new_grid
+}
+
+define solveBoard (grid, instructions, w, h) {
     make px, py = 0
-    set px, py, grid#y#x = x, y, '.' when grid#y#x == '@' for x in range(n) for y in range(n)
+    set px, py, grid#y#x = x, y, '.' when grid#y#x == '@' for x in range(w) for y in range(h)
 
     do {
         make changelist = []
+        set push_cache = {}
         switch i => {
             '^' => {
-                if pushUp(grid, px, py, changelist) then {
+                if pushUp(grid, px, py, changelist, w) then {
                     do {
-                        make x, y = c % n, c / n
+                        continue when c#1 == 'K' // keep the state
+                        const cpos = c#0
+                        const x, y = cpos % w, cpos / w
                         continue when x == px && y == py
                         // remove old position
                         set grid#y#x = '.'
                     } for c in changelist
                     do {
-                        make x, y = c % n, c / n
+                        continue when c#1 == 'K' // keep the state
+                        const cpos = c#0
+                        const x, y = cpos % w, cpos / w
                         continue when x == px && y == py
                         // add new position
-                        set grid#(y - 1)#x = 'O'
+                        set grid#(y - 1)#x = c#1
                     } for c in changelist
                     set py--
                 }
                 break
             }
             'v' => {
-                if pushDown(grid, px, py, changelist) then {
+                if pushDown(grid, px, py, changelist, w) then {
                     do {
-                        make x, y = c % n, c / n
+                        continue when c#1 == 'K' // keep the state
+                        const cpos = c#0
+                        const x, y = cpos % w, cpos / w
                         continue when x == px && y == py
                         // remove old position
                         set grid#y#x = '.'
                     } for c in changelist
                     do {
-                        make x, y = c % n, c / n
+                        continue when c#1 == 'K' // keep the state
+                        const cpos = c#0
+                        const x, y = cpos % w, cpos / w
                         continue when x == px && y == py
                         // add new position
-                        set grid#(y + 1)#x = 'O'
+                        set grid#(y + 1)#x = c#1
                     } for c in changelist
                     set py++
                 }
                 break
             }
             '<' => {
-                if pushLeft(grid, px, py, changelist) then {
+                if pushLeft(grid, px, py, changelist, w) then {
                     do {
-                        make x, y = c % n, c / n
+                        const cpos = c#0
+                        const x, y = cpos % w, cpos / w
                         continue when x == px && y == py
                         // remove old position
                         set grid#y#x = '.'
                     } for c in changelist
                     do {
-                        make x, y = c % n, c / n
+                        const cpos = c#0
+                        const x, y = cpos % w, cpos / w
                         continue when x == px && y == py
                         // add new position
-                        set grid#y#(x - 1) = 'O'
+                        set grid#y#(x - 1) = c#1
                     } for c in changelist
                     set px--
                 }
                 break
             }
             '>' => {
-                if pushRight(grid, px, py, changelist) then {
+                if pushRight(grid, px, py, changelist, w) then {
                     do {
-                        make x, y = c % n, c / n
+                        const cpos = c#0
+                        const x, y = cpos % w, cpos / w
                         continue when x == px && y == py
                         // remove old position
                         set grid#y#x = '.'
                     } for c in changelist
                     do {
-                        make x, y = c % n, c / n
+                        const cpos = c#0
+                        const x, y = cpos % w, cpos / w
                         continue when x == px && y == py
                         // add new position
-                        set grid#y#(x + 1) = 'O'
+                        set grid#y#(x + 1) = c#1
                     } for c in changelist
                     set px++
                 }
@@ -93,91 +129,106 @@ define solveBoard (grid, instructions) {
             }
         }
     } for i in instructions
-    return countScore(grid)
+    return countScore(grid, w, h)
 }
 
-define countScore (grid) {
+define countScore (grid, w, h) {
     make score = 0
     do {
-        set score += 100 * y + x when grid#y#x == 'O'
-    } for x in range(n) for y in range(n)
+        set score += 100 * y + x when grid#y#x == 'O' || grid#y#x == '['
+    } for x in range(w) for y in range(h)
     return score
 }
 
-define printBoard(grid, px, py) {
+define boardToString(grid, px, py) {
     make board = *grid
-    do sayln(board#py#px)
     set board#py#px = '@'
-    do sayln(`{stringJoin(board, "\n")}`)
+    return stringJoin(board, "\n")
 }
 
-define pushUp (grid, x, y, changelist) {
+define pushUp (grid, x, y, changelist, n, empty = false) {
+    if push_cache->[x + y * n, empty] then {
+        return true
+    }
+    set push_cache->[x + y * n, empty] = true
+    const at = [x + y * n, empty ? 'K' : grid#y#x]
     const next = grid#(y - 1)#x
     switch next => {
         '.' => {
-            do push(changelist, x + y * n)
+            do push(changelist, at)
             return true
         }
         'O' => {
-            do push(changelist, x + y * n)
-            return pushUp(grid, x, y - 1, changelist)
+            do push(changelist, at)
+            return pushUp(grid, x, y - 1, changelist, n)
         }
-        '#' => {
-            return false
+        '[' => {
+            do push(changelist, at)
+            return pushUp(grid, x, y - 1, changelist, n) && pushUp(grid, x + 1, y, changelist, n, true)
+        }
+        ']' => {
+            do push(changelist, at)
+            return pushUp(grid, x, y - 1, changelist, n) && pushUp(grid, x - 1, y, changelist, n, true)
         }
     }
     return false
 }
 
-define pushDown (grid, x, y, changelist) {
-    const at = grid#(y + 1)#x
-    switch at => {
+define pushDown (grid, x, y, changelist, n, empty = false) {
+    if push_cache->([x + y * n, empty]) then {
+        return true
+    }
+    set push_cache->[x + y * n, empty] = true
+    const at = [x + y * n, empty ? 'K' : grid#y#x]
+    const next = grid#(y + 1)#x
+    switch next => {
         '.' => {
-            do push(changelist, x + y * n)
+            do push(changelist, at)
             return true
         }
         'O' => {
-            do push(changelist, x + y * n)
-            return pushDown(grid, x, y + 1, changelist)
+            do push(changelist, at)
+            return pushDown(grid, x, y + 1, changelist, n)
         }
-        '#' => {
-            return false
+        '[' => {
+            do push(changelist, at)
+            return pushDown(grid, x, y + 1, changelist, n) && pushDown(grid, x + 1, y, changelist, n, true)
+        }
+        ']' => {
+            do push(changelist, at)
+            return pushDown(grid, x, y + 1, changelist, n) && pushDown(grid, x - 1, y, changelist, n, true)
         }
     }
     return false
 }
 
-define pushLeft (grid, x, y, changelist) {
-    const at = grid#y#(x - 1)
-    switch at => {
+define pushLeft (grid, x, y, changelist, n) {
+    const at = [x + y * n, grid#y#x]
+    const next = grid#y#(x - 1)
+    switch next => {
         '.' => {
-            do push(changelist, x + y * n)
+            do push(changelist, at)
             return true
         }
-        'O' => {
-            do push(changelist, x + y * n)
-            return pushLeft(grid, x - 1, y, changelist)
-        }
-        '#' => {
-            return false
+        'O', '[', ']' => {
+            do push(changelist, at)
+            return pushLeft(grid, x - 1, y, changelist, n)
         }
     }
     return false
 }
 
-define pushRight (grid, x, y, changelist) {
-    const at = grid#y#(x + 1)
-    switch at => {
+define pushRight (grid, x, y, changelist, n) {
+    const at = [x + y * n, grid#y#x]
+    const next = grid#y#(x + 1)
+    switch next => {
         '.' => {
-            do push(changelist, x + y * n)
+            do push(changelist, at)
             return true
         }
-        'O' => {
-            do push(changelist, x + y * n)
-            return pushRight(grid, x + 1, y, changelist)
-        }
-        '#' => {
-            return false
+        'O', '[', ']' => {
+            do push(changelist, at)
+            return pushRight(grid, x + 1, y, changelist, n)
         }
     }
     return false
