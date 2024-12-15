@@ -90,15 +90,21 @@ Thats it really. I hope you enjoy the solutions. Feel free to reach out to me if
         - Really simple brute force approach
     - [x] Part 2
         - My bruteforce approach wouldn't work for part 2, I need to come up with a different solution. Ended up keeping a dictionairy of all the duplicates, instead of checking the whole list and wasting time checking the same thing multiple times.
-- [ ] Day 12
-    - [ ] Part 1
-    - [ ] Part 2
-- [ ] Day 13
-    - [ ] Part 1
-    - [ ] Part 2
-- [ ] Day 14
-    - [ ] Part 1
-    - [ ] Part 2
+- [x] Day 12
+    - [x] Part 1
+        - Simple flood fill got the job done.
+    - [x] Part 2
+        - The amount of corners is the same as the amount of sides, so I counted the corners and used those.
+- [x] Day 13
+    - [x] Part 1
+        - Used Cramers rule to solve the problem
+    - [x] Part 2
+        - Because the solution was O(1), I just added 1 parameter to the function and it worked.
+- [x] Day 14
+    - [x] Part 1
+        - I did this in dosato, made a class and walked the robots
+    - [x] Part 2
+        - I used JavaScript, this kinda goes a bit against the rules, but Dosato can't generate images yet, so I had to use JavaScript to generate the image. <br> I used the same logic though
 - [ ] Day 15
     - [ ] Part 1
     - [ ] Part 2
