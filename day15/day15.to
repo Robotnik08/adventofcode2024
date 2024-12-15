@@ -1,0 +1,81 @@
+const input = read("input.txt")
+const parts = stringSplit(input, "\n\n")
+
+do clear()
+const instructions = []
+
+do push(instructions, c == '^' ? 0 : (c == '>' ? 1 : (c == 'v' ? 2 : 3))) for c in i for i in stringSplit(parts#1, "\n")
+
+const ic = len(instructions)
+
+const n = 50
+
+const board = *([[false] * n] * n)
+const boxes = []
+make px, py = 0
+
+make y = 0
+do {
+    set board#x#y = l#x == '#' ? true : false
+    do push(boxes, y * n + x) when l#x == 'O'
+    set px, py = x, y when l#x == '@'
+} for x in range(l) then { set y++ } for l in stringSplit(parts#0, "\n")
+
+do {
+    make dx, dy = i % 2 ? (i == 1 ? 1 : -1) : 0, i % 2 ? 0 : (i == 0 ? -1 : 1)
+    make steps = 0
+    const boxes_in_path = []
+    make bool valid = true
+    do {
+        make x, y = px + dx * (steps + 1), py + dy * (steps + 1)
+        make bool found_box = false
+        do {
+            do push(boxes_in_path, b)
+            set found_box = true
+            break    
+        } when boxes#b % n == x && boxes#b / n == y for b in range(boxes)
+        break when !(board#x#y) && !found_box
+        do {
+            set valid = false
+            break
+        } when board#x#y
+        set steps++
+    } while true
+    if valid then {
+        // move boxes
+        set boxes#b += dx + dy * n for b in boxes_in_path
+        set px += dx
+        set py += dy
+    }
+} for i in instructions
+
+// print board
+
+
+make amount_1 = 0
+set amount_1 += 100 * (b / n) + (b % n) for b in boxes
+
+do sayln(`Part 1: {amount_1}`)
+
+
+define boardToString () {
+    make string buf = ""
+    do {
+        do {
+            do {
+                set buf += '@'
+                continue
+            } when px == x && py == y
+            make f = false
+            do {
+                set f = true
+                set buf += 'O' 
+                break
+            } when b % n == x && b / n == y for b in boxes
+            continue when f
+            set buf += board#x#y ? '#' : '.'
+        } for x in range(n)
+        set buf += "\n"
+    } for y in range(n)
+    return buf
+}
