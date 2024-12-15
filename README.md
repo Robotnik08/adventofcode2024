@@ -104,10 +104,12 @@ Thats it really. I hope you enjoy the solutions. Feel free to reach out to me if
     - [x] Part 1
         - I did this in dosato, made a class and walked the robots
     - [x] Part 2
-        - I used JavaScript, this kinda goes a bit against the rules, but Dosato can't generate images yet, so I had to use JavaScript to generate the image. I used the same logic though
-- [ ] Day 15
-    - [ ] Part 1
-    - [ ] Part 2
+        - I used the dosato graphics library to draw each frame and save it to an image, then I looked through the folder to find the tree
+- [x] Day 15
+    - [x] Part 1
+        - Part one was quite simple.
+    - [x] Part 2
+        - I had to redo part 1 for a more efficient solution, it took me a bit, but I managed to pull it off. I also build a visualizer for the solution.
 - [ ] Day 16
     - [ ] Part 1
     - [ ] Part 2
