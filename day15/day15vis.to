@@ -1,4 +1,4 @@
-import "graphics"
+include "../visualization/graphics.to"
 
 const input = read("input.txt")
 const parts = stringSplit(input, "\n\n")

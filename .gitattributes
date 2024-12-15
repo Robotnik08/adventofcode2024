@@ -1,4 +1,0 @@
-* linguist-vendored
-*.js linguist-vendored=true
-*.json linguist-vendored=true
-*.to linguist-vendored=false
