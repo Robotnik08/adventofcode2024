@@ -13,8 +13,9 @@ const n = len(grid)
 
 make push_cache = {}
 
-const window_size = 1200
+const window_size = n * 15
 const window = createWindow("Advent of Code Day 15", window_size*2, window_size, 0)
+const font = createFont("../visualization/font.ttf", window_size / n)
 
 do sayln(`Part 2: {solveBoard(stretchBoard(grid), instructions, n*2, n)}`)
 
@@ -194,6 +195,9 @@ define renderBoard (grid, px, py, w, h, iteration, instruction) {
     const cx, cy = px * cell_size, py * cell_size
     do setColor(window, 255, 0, 0, 255)
     do drawSquare(window, cx, cy, cell_size, cell_size)
+
+    do setColor(window, 0, 0, 0, 255)
+    do drawText(window, font, `Iteration: {iteration} Instruction: {instruction}`, 0, 0)
     
     do render(window)
 }
