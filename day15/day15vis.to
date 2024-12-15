@@ -1,0 +1,291 @@
+import "graphics"
+
+const input = read("input.txt")
+const parts = stringSplit(input, "\n\n")
+
+const instructions = []
+do push(instructions, c) for c in i for i in stringSplit(parts#1, "\n")
+
+const ic = len(instructions)
+
+make grid = stringSplit(parts#0, "\n")
+const n = len(grid)
+
+make push_cache = {}
+
+const window_size = 1200
+const window = createWindow("Advent of Code Day 15", window_size*2, window_size, 0)
+
+do sayln(`Part 2: {solveBoard(stretchBoard(grid), instructions, n*2, n)}`)
+
+do closeWindow(window)
+
+define stretchBoard (grid) {
+    make new_grid = []
+    do {
+        make row = ""
+        do {
+            if c == '@' then {
+                set row += '@'
+                set row += '.'
+            } else if c == 'O' then {
+                set row += '['
+                set row += ']'
+            } else {
+                set row += c
+                set row += c
+            }
+        } for c in r
+        do push(new_grid, row)
+    } for r in grid
+    return new_grid
+}
+
+define solveBoard (grid, instructions, w, h) {
+    make px, py = 0
+    set px, py, grid#y#x = x, y, '.' when grid#y#x == '@' for x in range(w) for y in range(h)
+    
+    make it = 0
+    do {
+        make changelist = []
+        set push_cache = {}
+        switch i => {
+            '^' => {
+                if pushUp(grid, px, py, changelist, w) then {
+                    do {
+                        continue when c#1 == 'K' // keep the state
+                        const cpos = c#0
+                        const x, y = cpos % w, cpos / w
+                        continue when x == px && y == py
+                        // remove old position
+                        set grid#y#x = '.'
+                    } for c in changelist
+                    do {
+                        continue when c#1 == 'K' // keep the state
+                        const cpos = c#0
+                        const x, y = cpos % w, cpos / w
+                        continue when x == px && y == py
+                        // add new position
+                        set grid#(y - 1)#x = c#1
+                    } for c in changelist
+                    set py--
+                }
+                break
+            }
+            'v' => {
+                if pushDown(grid, px, py, changelist, w) then {
+                    do {
+                        continue when c#1 == 'K' // keep the state
+                        const cpos = c#0
+                        const x, y = cpos % w, cpos / w
+                        continue when x == px && y == py
+                        // remove old position
+                        set grid#y#x = '.'
+                    } for c in changelist
+                    do {
+                        continue when c#1 == 'K' // keep the state
+                        const cpos = c#0
+                        const x, y = cpos % w, cpos / w
+                        continue when x == px && y == py
+                        // add new position
+                        set grid#(y + 1)#x = c#1
+                    } for c in changelist
+                    set py++
+                }
+                break
+            }
+            '<' => {
+                if pushLeft(grid, px, py, changelist, w) then {
+                    do {
+                        const cpos = c#0
+                        const x, y = cpos % w, cpos / w
+                        continue when x == px && y == py
+                        // remove old position
+                        set grid#y#x = '.'
+                    } for c in changelist
+                    do {
+                        const cpos = c#0
+                        const x, y = cpos % w, cpos / w
+                        continue when x == px && y == py
+                        // add new position
+                        set grid#y#(x - 1) = c#1
+                    } for c in changelist
+                    set px--
+                }
+                break
+            }
+            '>' => {
+                if pushRight(grid, px, py, changelist, w) then {
+                    do {
+                        const cpos = c#0
+                        const x, y = cpos % w, cpos / w
+                        continue when x == px && y == py
+                        // remove old position
+                        set grid#y#x = '.'
+                    } for c in changelist
+                    do {
+                        const cpos = c#0
+                        const x, y = cpos % w, cpos / w
+                        continue when x == px && y == py
+                        // add new position
+                        set grid#y#(x + 1) = c#1
+                    } for c in changelist
+                    set px++
+                }
+                break
+            }
+        }
+        do renderBoard(grid, px, py, w, h, it, i)
+        set it++
+    } for i in instructions
+    return countScore(grid, w, h)
+}
+
+define countScore (grid, w, h) {
+    make score = 0
+    do {
+        set score += 100 * y + x when grid#y#x == 'O' || grid#y#x == '['
+    } for x in range(w) for y in range(h)
+    return score
+}
+
+define boardToString(grid, px, py) {
+    make board = *grid
+    set board#py#px = '@'
+    return stringJoin(board, "\n")
+}
+
+define renderBoard (grid, px, py, w, h, iteration, instruction) {
+    do updateState()
+
+    do {
+        do closeWindow(window)
+        do end()
+    } when ifQuit()
+
+    do setWindowTitle(window, `Advent of Code Day 15 Part 2 - Iteration: {iteration} Instruction: {instruction}`)
+
+    make cell_size = window_size * 2 / w
+
+    do {
+        const char type = grid#y#x
+        const cx, cy = x * cell_size, y * cell_size
+        switch type => {
+            '#' => {
+                do setColor(window, 255, 255, 255, 255)
+                break
+            }
+            '.' => {
+                do setColor(window, 0, 0, 0, 255)
+                break
+            }
+            'O' => {
+                do setColor(window, 0, 255, 0, 255)
+                break
+            }
+            '[' => {
+                do setColor(window, 0, 0, 255, 255)
+                break
+            }
+            ']' => {
+                do setColor(window, 0, 0, 255, 255)
+                break
+            }
+        }
+        do drawSquare(window, cx, cy, cell_size, cell_size)
+    } for x in range(grid#y) for y in range(grid)
+
+    const cx, cy = px * cell_size, py * cell_size
+    do setColor(window, 255, 0, 0, 255)
+    do drawSquare(window, cx, cy, cell_size, cell_size)
+    
+    do render(window)
+}
+
+define pushUp (grid, x, y, changelist, n, empty = false) {
+    if push_cache->[x + y * n, empty] then {
+        return true
+    }
+    set push_cache->[x + y * n, empty] = true
+    const at = [x + y * n, empty ? 'K' : grid#y#x]
+    const next = grid#(y - 1)#x
+    switch next => {
+        '.' => {
+            do push(changelist, at)
+            return true
+        }
+        'O' => {
+            do push(changelist, at)
+            return pushUp(grid, x, y - 1, changelist, n)
+        }
+        '[' => {
+            do push(changelist, at)
+            return pushUp(grid, x, y - 1, changelist, n) && pushUp(grid, x + 1, y, changelist, n, true)
+        }
+        ']' => {
+            do push(changelist, at)
+            return pushUp(grid, x, y - 1, changelist, n) && pushUp(grid, x - 1, y, changelist, n, true)
+        }
+    }
+    return false
+}
+
+define pushDown (grid, x, y, changelist, n, empty = false) {
+    if push_cache->([x + y * n, empty]) then {
+        return true
+    }
+    set push_cache->[x + y * n, empty] = true
+    const at = [x + y * n, empty ? 'K' : grid#y#x]
+    const next = grid#(y + 1)#x
+    switch next => {
+        '.' => {
+            do push(changelist, at)
+            return true
+        }
+        'O' => {
+            do push(changelist, at)
+            return pushDown(grid, x, y + 1, changelist, n)
+        }
+        '[' => {
+            do push(changelist, at)
+            return pushDown(grid, x, y + 1, changelist, n) && pushDown(grid, x + 1, y, changelist, n, true)
+        }
+        ']' => {
+            do push(changelist, at)
+            return pushDown(grid, x, y + 1, changelist, n) && pushDown(grid, x - 1, y, changelist, n, true)
+        }
+    }
+    return false
+}
+
+define pushLeft (grid, x, y, changelist, n) {
+    const at = [x + y * n, grid#y#x]
+    const next = grid#y#(x - 1)
+    switch next => {
+        '.' => {
+            do push(changelist, at)
+            return true
+        }
+        'O', '[', ']' => {
+            do push(changelist, at)
+            return pushLeft(grid, x - 1, y, changelist, n)
+        }
+    }
+    return false
+}
+
+define pushRight (grid, x, y, changelist, n) {
+    const at = [x + y * n, grid#y#x]
+    const next = grid#y#(x + 1)
+    switch next => {
+        '.' => {
+            do push(changelist, at)
+            return true
+        }
+        'O', '[', ']' => {
+            do push(changelist, at)
+            return pushRight(grid, x + 1, y, changelist, n)
+        }
+    }
+    return false
+}
