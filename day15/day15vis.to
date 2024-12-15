@@ -183,11 +183,7 @@ define renderBoard (grid, px, py, w, h, iteration, instruction) {
                 do setColor(window, 0, 255, 0, 255)
                 break
             }
-            '[' => {
-                do setColor(window, 0, 0, 255, 255)
-                break
-            }
-            ']' => {
+            '[', ']' => {
                 do setColor(window, 0, 0, 255, 255)
                 break
             }
