@@ -1,81 +1,184 @@
 const input = read("input.txt")
 const parts = stringSplit(input, "\n\n")
 
-do clear()
 const instructions = []
-
-do push(instructions, c == '^' ? 0 : (c == '>' ? 1 : (c == 'v' ? 2 : 3))) for c in i for i in stringSplit(parts#1, "\n")
+do push(instructions, c) for c in i for i in stringSplit(parts#1, "\n")
 
 const ic = len(instructions)
 
-const n = 50
+make grid = stringSplit(parts#0, "\n")
+const n = len(grid)
 
-const board = *([[false] * n] * n)
-const boxes = []
-make px, py = 0
+do sayln(`Part 1: {solveBoard(*grid, instructions)}`)
 
-make y = 0
-do {
-    set board#x#y = l#x == '#' ? true : false
-    do push(boxes, y * n + x) when l#x == 'O'
-    set px, py = x, y when l#x == '@'
-} for x in range(l) then { set y++ } for l in stringSplit(parts#0, "\n")
 
-do {
-    make dx, dy = i % 2 ? (i == 1 ? 1 : -1) : 0, i % 2 ? 0 : (i == 0 ? -1 : 1)
-    make steps = 0
-    const boxes_in_path = []
-    make bool valid = true
+define solveBoard (grid, instructions) {
+    make px, py = 0
+    set px, py, grid#y#x = x, y, '.' when grid#y#x == '@' for x in range(n) for y in range(n)
+
     do {
-        make x, y = px + dx * (steps + 1), py + dy * (steps + 1)
-        make bool found_box = false
-        do {
-            do push(boxes_in_path, b)
-            set found_box = true
-            break    
-        } when boxes#b % n == x && boxes#b / n == y for b in range(boxes)
-        break when !(board#x#y) && !found_box
-        do {
-            set valid = false
-            break
-        } when board#x#y
-        set steps++
-    } while true
-    if valid then {
-        // move boxes
-        set boxes#b += dx + dy * n for b in boxes_in_path
-        set px += dx
-        set py += dy
-    }
-} for i in instructions
-
-// print board
-
-
-make amount_1 = 0
-set amount_1 += 100 * (b / n) + (b % n) for b in boxes
-
-do sayln(`Part 1: {amount_1}`)
-
-
-define boardToString () {
-    make string buf = ""
-    do {
-        do {
-            do {
-                set buf += '@'
-                continue
-            } when px == x && py == y
-            make f = false
-            do {
-                set f = true
-                set buf += 'O' 
+        make changelist = []
+        switch i => {
+            '^' => {
+                if pushUp(grid, px, py, changelist) then {
+                    do {
+                        make x, y = c % n, c / n
+                        continue when x == px && y == py
+                        // remove old position
+                        set grid#y#x = '.'
+                    } for c in changelist
+                    do {
+                        make x, y = c % n, c / n
+                        continue when x == px && y == py
+                        // add new position
+                        set grid#(y - 1)#x = 'O'
+                    } for c in changelist
+                    set py--
+                }
                 break
-            } when b % n == x && b / n == y for b in boxes
-            continue when f
-            set buf += board#x#y ? '#' : '.'
-        } for x in range(n)
-        set buf += "\n"
-    } for y in range(n)
-    return buf
+            }
+            'v' => {
+                if pushDown(grid, px, py, changelist) then {
+                    do {
+                        make x, y = c % n, c / n
+                        continue when x == px && y == py
+                        // remove old position
+                        set grid#y#x = '.'
+                    } for c in changelist
+                    do {
+                        make x, y = c % n, c / n
+                        continue when x == px && y == py
+                        // add new position
+                        set grid#(y + 1)#x = 'O'
+                    } for c in changelist
+                    set py++
+                }
+                break
+            }
+            '<' => {
+                if pushLeft(grid, px, py, changelist) then {
+                    do {
+                        make x, y = c % n, c / n
+                        continue when x == px && y == py
+                        // remove old position
+                        set grid#y#x = '.'
+                    } for c in changelist
+                    do {
+                        make x, y = c % n, c / n
+                        continue when x == px && y == py
+                        // add new position
+                        set grid#y#(x - 1) = 'O'
+                    } for c in changelist
+                    set px--
+                }
+                break
+            }
+            '>' => {
+                if pushRight(grid, px, py, changelist) then {
+                    do {
+                        make x, y = c % n, c / n
+                        continue when x == px && y == py
+                        // remove old position
+                        set grid#y#x = '.'
+                    } for c in changelist
+                    do {
+                        make x, y = c % n, c / n
+                        continue when x == px && y == py
+                        // add new position
+                        set grid#y#(x + 1) = 'O'
+                    } for c in changelist
+                    set px++
+                }
+                break
+            }
+        }
+    } for i in instructions
+    return countScore(grid)
+}
+
+define countScore (grid) {
+    make score = 0
+    do {
+        set score += 100 * y + x when grid#y#x == 'O'
+    } for x in range(n) for y in range(n)
+    return score
+}
+
+define printBoard(grid, px, py) {
+    make board = *grid
+    do sayln(board#py#px)
+    set board#py#px = '@'
+    do sayln(`{stringJoin(board, "\n")}`)
+}
+
+define pushUp (grid, x, y, changelist) {
+    const next = grid#(y - 1)#x
+    switch next => {
+        '.' => {
+            do push(changelist, x + y * n)
+            return true
+        }
+        'O' => {
+            do push(changelist, x + y * n)
+            return pushUp(grid, x, y - 1, changelist)
+        }
+        '#' => {
+            return false
+        }
+    }
+    return false
+}
+
+define pushDown (grid, x, y, changelist) {
+    const at = grid#(y + 1)#x
+    switch at => {
+        '.' => {
+            do push(changelist, x + y * n)
+            return true
+        }
+        'O' => {
+            do push(changelist, x + y * n)
+            return pushDown(grid, x, y + 1, changelist)
+        }
+        '#' => {
+            return false
+        }
+    }
+    return false
+}
+
+define pushLeft (grid, x, y, changelist) {
+    const at = grid#y#(x - 1)
+    switch at => {
+        '.' => {
+            do push(changelist, x + y * n)
+            return true
+        }
+        'O' => {
+            do push(changelist, x + y * n)
+            return pushLeft(grid, x - 1, y, changelist)
+        }
+        '#' => {
+            return false
+        }
+    }
+    return false
+}
+
+define pushRight (grid, x, y, changelist) {
+    const at = grid#y#(x + 1)
+    switch at => {
+        '.' => {
+            do push(changelist, x + y * n)
+            return true
+        }
+        'O' => {
+            do push(changelist, x + y * n)
+            return pushRight(grid, x + 1, y, changelist)
+        }
+        '#' => {
+            return false
+        }
+    }
+    return false
 }
