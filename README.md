@@ -104,7 +104,7 @@ Thats it really. I hope you enjoy the solutions. Feel free to reach out to me if
     - [x] Part 1
         - I did this in dosato, made a class and walked the robots
     - [x] Part 2
-        - I used JavaScript, this kinda goes a bit against the rules, but Dosato can't generate images yet, so I had to use JavaScript to generate the image. <br> I used the same logic though
+        - I used JavaScript, this kinda goes a bit against the rules, but Dosato can't generate images yet, so I had to use JavaScript to generate the image. I used the same logic though
 - [ ] Day 15
     - [ ] Part 1
     - [ ] Part 2
