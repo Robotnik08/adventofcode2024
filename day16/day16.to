@@ -2,7 +2,7 @@ const input = read("input.txt")
 const rows = stringSplit(input, "\n")
 const n = len(rows)
 
-const visited = *([[false] * n] * n)
+const visited = *([[0] * n] * n)
 
 make px, py, ex, ey = 0
 
@@ -11,37 +11,60 @@ do {
     set ex, ey = x, y when rows#y#x == 'E'
 } for x in range(n) for y in range(n)
 
-make queue = [[px, py, 0, -1]] // x, y, distance, direction
+set visited#py#px = 1
 
-define long bfs (queue) {
-    make dx = [-1, 0, 1, 0]
-    make dy = [0, -1, 0, 1]
-    make dirs = "<^>v"
-    make min_dist = Infinity
+const queue = [[px, py, 1, '>']] // x, y, distance, direction
+
+const dx, dy, dirs = [-1, 0, 1, 0], [0, -1, 0, 1], "<^>v"
+make min_dist = Infinity
+
+do {
+    const q = shift(queue)
+    const x, y, dist, dir = q#0, q#1, q#2, q#3
+
+    if x == ex && y == ey then {
+        if dist < min_dist then {
+            set min_dist = dist
+        }
+        continue
+    }
 
     do {
-        const q = shift(queue)
-        const x, y, dist, dir = q#0, q#1, q#2, q#3
-
-        if x == ex && y == ey then {
-            if dist < min_dist then {
-                set min_dist = dist
+        const nx, ny = x + dx#i, y + dy#i
+        if nx >= 0 && nx < n && ny >= 0 && ny < n && rows#ny#nx != '#' then {
+            const new_dist = dist + (dir == dirs#i ? 1 : 1001)
+            if visited#ny#nx == 0 || visited#ny#nx > new_dist then {
+                if nx == ex && ny == ey then {
+                    set visited#ny#nx = new_dist
+                } else {
+                    set visited#ny#nx = new_dist
+                }
+                do push(queue, [nx, ny, new_dist, dirs#i])
             }
         }
+    } for i in range(4)
+} while len(queue) > 0
 
-        do {
-            const nx, ny = x + dx#i, y + dy#i
-            if nx >= 0 && nx < n && ny >= 0 && ny < n && rows#ny#nx != '#' then {
-                const new_dist = dist + (dir == dirs#i || dir == -1 ? 1 : 1001)
-                if !(visited#ny#nx) || visited#ny#nx > new_dist then {
-                    set visited#ny#nx = new_dist
-                    do push(queue, [nx, ny, new_dist, dirs#i])
-                }
-            }
-        } for i in range(4)
-    } while len(queue) > 0
 
-    return min_dist
+do sayln(`Part 1: {min_dist - 1}`)
+
+const shortest_paths = []
+do backtrack_paths(ex, ey)
+
+define backtrack_paths (x, y) {
+    return when rows#y#x == '#' || rows#y#x == 'O'
+    // make dist = x == ex && y == ey ? min_dist : visited#y#x
+    make dist = visited#y#x
+
+    do push(shortest_paths, x + y * n)
+    set rows#y#x = 'O'
+
+    do {
+        const nx, ny = x + dx#i, y + dy#i
+        if nx >= 0 && nx < n && ny >= 0 && ny < n then {
+            do backtrack_paths(nx, ny) when visited#ny#nx + 1 == dist || visited#ny#nx + 1001 == dist || visited#ny#nx - 999 == dist
+        }
+    } for i in range(4)
 }
 
-do sayln(`Part 1: {bfs(queue)}`)
+do sayln(`Part 2: {len(removeDuplicates(shortest_paths))}`)
