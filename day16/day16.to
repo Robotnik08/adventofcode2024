@@ -1,0 +1,47 @@
+const input = read("input.txt")
+const rows = stringSplit(input, "\n")
+const n = len(rows)
+
+const visited = *([[false] * n] * n)
+
+make px, py, ex, ey = 0
+
+do {
+    set px, py = x, y when rows#y#x == 'S'
+    set ex, ey = x, y when rows#y#x == 'E'
+} for x in range(n) for y in range(n)
+
+make queue = [[px, py, 0, -1]] // x, y, distance, direction
+
+define long bfs (queue) {
+    make dx = [-1, 0, 1, 0]
+    make dy = [0, -1, 0, 1]
+    make dirs = "<^>v"
+    make min_dist = Infinity
+
+    do {
+        const q = shift(queue)
+        const x, y, dist, dir = q#0, q#1, q#2, q#3
+
+        if x == ex && y == ey then {
+            if dist < min_dist then {
+                set min_dist = dist
+            }
+        }
+
+        do {
+            const nx, ny = x + dx#i, y + dy#i
+            if nx >= 0 && nx < n && ny >= 0 && ny < n && rows#ny#nx != '#' then {
+                const new_dist = dist + (dir == dirs#i || dir == -1 ? 1 : 1001)
+                if !(visited#ny#nx) || visited#ny#nx > new_dist then {
+                    set visited#ny#nx = new_dist
+                    do push(queue, [nx, ny, new_dist, dirs#i])
+                }
+            }
+        } for i in range(4)
+    } while len(queue) > 0
+
+    return min_dist
+}
+
+do sayln(`Part 1: {bfs(queue)}`)
