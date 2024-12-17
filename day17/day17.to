@@ -10,14 +10,14 @@ const instructions = stringSplit(stringSplit(lines#(-1), " ")#1, ",")
 set instructions#i |>= stringToInt for i in range(len(instructions))
 
 do sayln(`Part 1: {stringJoin(runVm(*registers, instructions), ",")}`)
-do sayln(`Part 2: {findInitialA(0, len(instructions) - 1)}`)
+do sayln(`Part 2: {findA(0, len(instructions) - 1)}`)
 
-define findInitialA (next, i) {
+define findA (next, i) {
     return next when i < 0
     do {
         const out = runVm([a, 0, 0], instructions)
         if out#0 == instructions#i then {
-            const final = findInitialA(a, i - 1)
+            const final = findA(a, i - 1)
             return final when final >= 0
         }
     } for a in range(next << 3, (next << 3) + 8)
