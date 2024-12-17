@@ -12,15 +12,15 @@ set instructions#i |>= stringToInt for i in range(len(instructions))
 do sayln(`Part 1: {stringJoin(runVm(*registers, instructions), ",")}`)
 do sayln(`Part 2: {findInitialA(0, len(instructions) - 1)}`)
 
-define findInitialA (nextVal, i) {
-    return nextVal when i < 0
+define findInitialA (next, i) {
+    return next when i < 0
     do {
         const out = runVm([a, 0, 0], instructions)
         if out#0 == instructions#i then {
-            const final_val = findInitialA(a, i - 1)
-            return final_val when final_val >= 0
+            const final = findInitialA(a, i - 1)
+            return final when final >= 0
         }
-    } for a in range(nextVal << 3, (nextVal << 3) + 8)
+    } for a in range(next << 3, (next << 3) + 8)
     return -1
 }
 
