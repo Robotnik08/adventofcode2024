@@ -1,0 +1,98 @@
+const input = read("input.txt")
+const lines = stringSplit(input, "\n")
+
+const registers = [0, 0, 0]
+set registers#0 = substring(lines#0, 12, len(lines#0) - 1) |> stringToInt
+set registers#1 = substring(lines#1, 12, len(lines#1) - 1) |> stringToInt
+set registers#2 = substring(lines#2, 12, len(lines#2) - 1) |> stringToInt
+
+make bool halt = false
+
+const instructions = stringSplit(stringSplit(lines#(-1), " ")#1, ",")
+set instructions#i |>= stringToInt for i in range(len(instructions))
+
+make ip = 0
+make string output = ""
+
+do {
+    const opcode = instructions#ip
+    set ip++
+    const operant = instructions#ip
+    set ip++
+    const combo_operant = getComboOperant(operant)
+    // do sayln(`{ip}: {opcode} {operant} {combo_operant}`)
+
+    switch opcode => {
+        OpCode->adv => {
+            set registers#(Register->a) /= 2 ** combo_operant
+            break
+        }
+        OpCode->bxl => {
+            set registers#(Register->b) ^= operant
+            break
+        }
+        OpCode->bst => {
+            set registers#(Register->b) = combo_operant % 8
+            break
+        }
+        OpCode->jnz => {
+            if registers#(Register->a) != 0 then {
+                set ip = operant
+            }
+            break
+        }
+        OpCode->bxc => {
+            set registers#(Register->b) ^= registers#(Register->c)
+            break
+        }
+        OpCode->out => {
+            if output == "" then {
+                set output = combo_operant % 8
+            } else {
+                set output += `,{combo_operant % 8}`
+            }
+            break
+        }
+        OpCode->bdv => {
+            set registers#(Register->b) = registers#(Register->a) / (2 ** combo_operant)
+            break
+        }
+        OpCode->cdv => {
+            set registers#(Register->c) = registers#(Register->a) / (2 ** combo_operant)
+            break
+        }
+        other => {
+            do sayln(`Unknown opcode: {opcode}`) break
+        }
+    }
+
+    set halt = true when ip < 0 || ip >= len(instructions)
+} until halt
+
+do sayln(`Part 1: {output}`)
+
+define getComboOperant(n) {
+    return n when n <= 3
+    return registers#(Register->a) when n == 4
+    return registers#(Register->b) when n == 5
+    return registers#(Register->c) when n == 6
+    return 0 // n 7 isn't used
+}
+
+
+enum OpCode {
+    adv, // Devision: numerator = rA, denominator = combo_operant**2 store in rA
+    bxl, // Bitwise XOR: rB = rB ^ literal
+    bst, // Modulo 8: rB = combo_operant % 8
+    jnz, // Jump if not zero: if rA != 0 then ip = literal
+    bxc, // Bitwise XOR: rB = rB ^ rC
+    out, // Out: combo_operant % 8
+    bdv, // Devision: numerator = rA, demoninator = combo_operant**2 store in rB
+    cdv // Devision: numerator = rA, demoninator = combo_operant**2 store in rC
+}
+
+enum Register {
+    a,
+    b,
+    c
+}
