@@ -9,18 +9,12 @@ do {
     do push(right, stringToInt(split#1))
 } for line in lines
 
-/// Part 1
-
 const leftSorted, rightSorted = sort(left), sort(right)
 
 make result = 0
 set result += !- (leftSorted#i - rightSorted#i) for i in range(lines)
-
 do sayln(`Part 1: {result}`)
-
-/// Part 2
 
 set result = 0
 set result += left#i * count(right, left#i) for i in range(lines)
-
 do sayln(`Part 2: {result}`)

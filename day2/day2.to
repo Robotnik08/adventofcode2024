@@ -13,10 +13,10 @@ do {
         continue
     }
 
-    if isSafe(splice(numbers, i, 1)) then {
+    if isSafe(i) then {
         set semi_safe++
         break
-    } for i in range(numbers)
+    } for i in combinations(numbers, len(numbers) - 1)
 } for line in lines
 
 do sayln(`Part 1: {safe}`)
