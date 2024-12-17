@@ -25,51 +25,38 @@ define findA (next, i) {
 }
 
 define runVm (registers, instructions) {
-    make bool halt = false
+    make halt, ip, output = false, 0, []
 
-    make ip = 0
-    make output = []
     do {
         const opcode = instructions#ip
-        set ip++
-        const operant = instructions#ip
+        const operant = instructions#(ip + 1)
         const combo_operant = getComboOperant(operant, registers)
-        set ip++
+        set ip += 2
 
         switch opcode => {
             OpCode->adv => {
-                set registers#(Register->a) /= 2 ** combo_operant
-                break
+                set registers#(Register->a) /= 2 ** combo_operant break
             }
             OpCode->bxl => {
-                set registers#(Register->b) ^= operant
-                break
+                set registers#(Register->b) ^= operant break
             }
             OpCode->bst => {
-                set registers#(Register->b) = combo_operant % 8
-                break
+                set registers#(Register->b) = combo_operant % 8 break
             }
             OpCode->jnz => {
-                if registers#(Register->a) != 0 then {
-                    set ip = operant
-                }
-                break
+                set ip = operant when registers#(Register->a) != 0 break
             }
             OpCode->bxc => {
-                set registers#(Register->b) ^= registers#(Register->c)
-                break
+                set registers#(Register->b) ^= registers#(Register->c) break
             }
             OpCode->out => {
-                do push(output, combo_operant % 8)
-                break
+                do push(output, combo_operant % 8) break
             }
             OpCode->bdv => {
-                set registers#(Register->b) = registers#(Register->a) / (2 ** combo_operant)
-                break
+                set registers#(Register->b) = registers#(Register->a) / (2 ** combo_operant) break
             }
             OpCode->cdv => {
-                set registers#(Register->c) = registers#(Register->a) / (2 ** combo_operant)
-                break
+                set registers#(Register->c) = registers#(Register->a) / (2 ** combo_operant) break
             }
             other => {
                 do sayln(`Unknown opcode: {opcode}`) break
