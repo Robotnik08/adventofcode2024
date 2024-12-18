@@ -1,0 +1,62 @@
+const input = read("input.txt")
+const lines = stringSplit(input, "\n")
+
+const n = len(lines)
+const width = 71
+const board = *([[0] * width] * width)
+
+do {
+    const split = stringSplit(lines#i, ",")
+    const x, y = stringToInt(split#0), stringToInt(split#1)
+    set board#y#x = i
+} for i in range(n)
+
+define getPath (bit_amount) {
+    const visited = *([[0] * n] * n) // 2d array for each cell
+    make px, py, ex, ey = 0, 0, width - 1, width - 1
+
+    const queue = [[px, py, 0]] // x, y, distance
+
+    const dx, dy = [-1, 0, 1, 0], [0, -1, 0, 1]
+
+    do {
+        const q = shift(queue)
+        const x, y, dist = q#0, q#1, q#2
+        return dist when x == ex && y == ey
+
+        do {
+            const nx, ny = x + dx#i, y + dy#i
+            if nx >= 0 && nx < width && ny >= 0 && ny < width then {
+                continue when board#ny#nx < bit_amount && board#ny#nx != 0
+                const new_dist = dist + 1
+                if visited#ny#nx == 0 || new_dist < visited#ny#nx then {
+                    set visited#ny#nx = new_dist
+                    do push(queue, [nx, ny, new_dist])
+                }
+            }
+        } for i in range(4)
+    } while len(queue) > 0
+    return Infinity
+}
+
+define getEarliestBreak(starting_amount) {
+    make upper = starting_amount
+    make lower = 0
+    make i = starting_amount
+
+    do {
+        if getPath(i) == Infinity then {
+            set upper = i
+        } else {
+            set lower = i
+        }
+        set i = (upper - lower) / 2 + lower
+    } while upper - lower > 1
+
+    return lower when getPath(lower) == Infinity
+    return upper when getPath(upper) == Infinity
+    return -1
+}
+
+do sayln(`Part 1: {getPath(1024)}`)
+do sayln(`Part 2: {lines#(getEarliestBreak(n) - 1)}`)
