@@ -1,0 +1,44 @@
+const input = read("input.txt")
+const parts = stringSplit(input, "\n\n")
+
+make available = sort(stringSplit(parts#0, ", "), int (a, b) => { return len(b) - len(a) })
+make available_lengths = removeDuplicates(map(available, int (v, i) => { return len(v) }))
+const requested = stringSplit(parts#1, "\n")
+make type_sorted = {}
+do {
+    set type_sorted->(a#0) ??= []
+    do push(type_sorted->(a#0), a)
+} for a in available
+
+make cache = {}
+
+define bool match_design(d, i = 0) {
+    set cache = {} when i > 0
+    return true when len(d) == 0
+    if cache->(d) !== null then {
+        return cache->(d)
+    }
+    if stringStartsWith(d, a) then { if match_design(substring(d, len(a))) then {
+        set cache->(d) = true
+        return true
+    }} for a in type_sorted->(d#0)
+    set cache->(d) = false
+    return false
+}
+
+define long match_design_count(d, i = 0) {
+    set cache = {} when i > 0
+    return 1 when len(d) == 0
+    if cache->(d) !== null then {
+        return cache->(d)
+    }
+    make amount = 0
+    if stringStartsWith(d, a) then {
+        set amount += match_design_count(substring(d, len(a)))
+    } for a in type_sorted->(d#0)
+    set cache->(d) = amount
+    return amount
+}
+
+do sayln(`Part 1: {sum(map(requested, match_design))}`)
+do sayln(`Part 2: {sum(map(requested, match_design_count))}`)
