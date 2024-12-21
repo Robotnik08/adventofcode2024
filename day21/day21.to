@@ -1,0 +1,73 @@
+const input = read("input.txt")
+const codes = stringSplit(input, "\n")
+
+const numeric =     "789456123.0A"
+const directional = ".^A<v>"
+
+make chain = getChain(2)
+make amount = 0
+set amount += get_complexity(c, chain) * stringToInt(c) for c in codes
+do sayln(`Part 1: {amount}`)
+
+set chain = getChain(25)
+set amount = 0
+set amount += get_complexity(c, chain) * stringToInt(c) for c in codes
+do sayln(`Part 2: {amount}`)
+
+define getChain(size) {
+    make chain = [KeyPad(numeric, 3)]
+    do push(chain, KeyPad(directional, 0)) for range(size)
+    return chain
+}
+
+class KeyPad (buttons, hole_y) {
+    implement get_presses (current, target) {
+        const current_pos = stringIndexOf(buttons, current)
+        const target_pos = stringIndexOf(buttons, target)
+
+        const x_diff = target_pos % 3 - current_pos % 3
+        const y_diff = target_pos / 3 - current_pos / 3
+
+        const x_moves = (x_diff > 0 ? ">" : "<") * !-x_diff
+        const y_moves = (y_diff > 0 ? "v" : "^") * !-y_diff	
+
+        return x_moves + y_moves when target_pos / 3 == hole_y && current_pos % 3 == 0
+        return y_moves + x_moves when current_pos / 3 == hole_y && target_pos % 3 == 0
+
+        return stringContains(x_moves, "<") ? x_moves + y_moves : y_moves + x_moves
+    }
+}
+
+define get_complexity (code, chain) {
+    const levels_amount = len(chain) - 1
+
+    const cache = {}
+
+    make total = 0
+    make key = "A"
+    do {
+        set total += get_num_press(key, c, 0, levels_amount, cache)
+        set key = c
+    } for c in code
+    return total
+}
+
+
+define get_num_press (current, target, level, max_level, cache) {
+    return cache->`{current},{target},{level}` when cache->`{current},{target},{level}`
+    const seq = chain#level->get_presses(current, target) + 'A'
+    if level == max_level then {
+        const res = len(seq)
+        set cache->`{current},{target},{level}` = res
+        return res
+    }
+
+    make l, key = 0, "A"
+    do {
+        set l += get_num_press(key, i, level + 1, max_level, cache)
+        set key = i
+    } for i in seq
+
+    set cache->`{current},{target},{level}` = l
+    return l
+}
