@@ -1,0 +1,70 @@
+const input = read("input.txt")
+const grid = stringSplit(input, "\n")
+const n = len(grid)
+
+const dirs = [[0, -1], [1, 0], [0, 1], [-1, 0]]
+
+const nodes = get_nodes(grid)
+do sayln(`Part 1: {find_score(nodes, 2)}`)
+do sayln(`Part 2: {find_score(nodes, 20)}`)
+
+define find_score (nodes, max_distance) {
+    make res = 0
+
+    do {
+        do {
+            continue when nodes#y#x == -1
+            const distance = !-y1 + !-x1
+            if distance <= max_distance then {
+                set res += try_pos(y + y1, x + x1, nodes, nodes#y#x, distance)
+            }
+        } for x1 in range(-max_distance, max_distance + 1) for y1 in range(-max_distance, max_distance + 1)
+    } for x in range(n) for y in range(n)
+
+    return res
+}
+
+define try_pos (y, x, nodes, compare, steps) {
+    return 0 when y < 0 || y >= n || x < 0 || x >= n
+    const val = nodes#y#x
+
+    return val - compare - steps >= 100 ? 1 : 0
+}
+
+define get_nodes (grid) {
+    make nodes = *([[-1] * n] * n)
+
+    make next = get_start(grid)
+    make index = 1
+
+    do {
+        set nodes#(next#1)#(next#0) = index
+
+        return nodes when grid#(next#1)#(next#0) == 'E'
+
+        if valid(next, grid, 0, nodes) then { 
+            set next = next_dir(next, 0) 
+        } else if valid(next, grid, 1, nodes) then {
+            set next = next_dir(next, 1)
+        } else if valid(next, grid, 2, nodes) then {
+            set next = next_dir(next, 2)
+        } else if valid(next, grid, 3, nodes) then {
+            set next = next_dir(next, 3)
+        }
+        set index++
+    } while true
+}
+
+define next_dir (next, dir) {
+    return [next#0 + dirs#dir#0, next#1 + dirs#dir#1]
+}
+
+define valid (next, grid, dir, nodes) {
+    const y = next#1 + dirs#dir#1
+    const x = next#0 + dirs#dir#0
+    return nodes#y#x == -1 && (grid#y#x == '.' || grid#y#x == 'E')
+}
+
+define get_start (grid) {
+    return [x, y] when grid#y#x == 'S' for x in range(len(grid#y)) for y in range(len(grid)) 
+}
