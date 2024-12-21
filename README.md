@@ -110,24 +110,36 @@ Thats it really. I hope you enjoy the solutions. Feel free to reach out to me if
         - Part one was quite simple.
     - [x] Part 2
         - I had to redo part 1 for a more efficient solution, it took me a bit, but I managed to pull it off. I also build a visualizer for the solution.
-- [ ] Day 16
-    - [ ] Part 1
-    - [ ] Part 2
-- [ ] Day 17
-    - [ ] Part 1
-    - [ ] Part 2
-- [ ] Day 18
-    - [ ] Part 1
-    - [ ] Part 2
-- [ ] Day 19
-    - [ ] Part 1
-    - [ ] Part 2
-- [ ] Day 20
-    - [ ] Part 1
-    - [ ] Part 2
-- [ ] Day 21
-    - [ ] Part 1
-    - [ ] Part 2
+- [x] Day 16
+    - [x] Part 1
+        - Simple Dijkstra algorithm solved the maze
+    - [x] Part 2
+        - I backtracked the path to find all of the best paths
+- [x] Day 17
+    - [x] Part 1
+        - Virtual Machine remake, up my alley
+    - [x] Part 2
+        - Part two was really hard, I eventually managed to figure out the solution, but it took me a while.
+- [x] Day 18
+    - [x] Part 1
+        - Simple Dijkstra solves the maze. 
+    - [x] Part 2
+        - Used a binary search to find the answer.
+- [x] Day 19
+    - [x] Part 1
+        - Simple recursive function solved the problem
+    - [x] Part 2
+        - Part 2 was actually easier lol.
+- [x] Day 20
+    - [x] Part 1
+        - Part one was tricky, but a dirty brute force approach got the job done.
+    - [x] Part 2
+        - Expanded on part 1, and added a few more checks, it takes a looong time to solve, but it works.
+- [x] Day 21
+    - [x] Part 1
+        - Wow, that was extremely difficult, But I managed to make a solution that is extremely scalable.
+    - [x] Part 2
+        - Thanks to my prediction, I was able to solve part 2 in a few minutes.
 - [ ] Day 22
     - [ ] Part 1
     - [ ] Part 2
