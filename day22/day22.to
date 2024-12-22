@@ -1,0 +1,30 @@
+const input = read("input.txt")
+const numbers = map(stringSplit(input, "\n"), long (v, i) => { return stringToInt(v) })
+
+make amount_1 = 0
+const sequence_total = [0] * 0x100000
+make c = 0
+do {
+    const buyer = [n % 10]
+    do {
+        set n ^= (n & 0x3FFFF) << 6
+        set n ^= n >> 5
+        set n ^= (n & 0x1FFF) << 11
+        do push(buyer, n % 10)
+    } for range(2000)
+    set amount_1 += n
+
+    const v = [false] * 0x100000
+    do {
+        const a, b, c, d, e = buyer#i, buyer#(i + 1), buyer#(i + 2), buyer#(i + 3), buyer#(i + 4)
+        const key = (b - a + 10) | ((c - b + 10) << 5) | ((d - c + 10) << 10) | ((e - d + 10) << 15)
+        continue when v#key
+        set v#key = true
+        set sequence_total#key += e
+    } for i in range(len(buyer) - 4)
+    do sayln(c)
+    set c++
+} for n in numbers
+
+do sayln(`Part 1: {amount_1}`)
+do sayln(`Part 2: {max(sequence_total)}`)
