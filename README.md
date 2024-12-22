@@ -140,9 +140,11 @@ Thats it really. I hope you enjoy the solutions. Feel free to reach out to me if
         - Wow, that was extremely difficult, But I managed to make a solution that is extremely scalable.
     - [x] Part 2
         - Thanks to my prediction, I was able to solve part 2 in a few minutes.
-- [ ] Day 22
-    - [ ] Part 1
-    - [ ] Part 2
+- [x] Day 22
+    - [x] Part 1
+        - Really easy, just a simple loop
+    - [x] Part 2
+        - My original bruteforce would've taken too long, due to the lack of hashable object keys in the language at the moment, I came up with hashing the numbers myself, and then using a flat array (really big one) to store the values.
 - [ ] Day 23
     - [ ] Part 1
     - [ ] Part 2
