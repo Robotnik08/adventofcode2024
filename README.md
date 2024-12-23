@@ -145,9 +145,11 @@ Thats it really. I hope you enjoy the solutions. Feel free to reach out to me if
         - Really easy, just a simple loop
     - [x] Part 2
         - My original bruteforce would've taken too long, due to the lack of hashable object keys in the language at the moment, I came up with hashing the numbers myself, and then using a flat array (really big one) to store the values.
-- [ ] Day 23
-    - [ ] Part 1
-    - [ ] Part 2
+- [x] Day 23
+    - [x] Part 1
+        - Very simple, just a few loops
+    - [x] Part 2
+        - This was pretty difficult, I first used a plain Bron Kerbosch algorithm, but that was too slow, so I had to optimize it by using a pivot. https://en.wikipedia.org/wiki/MaxCliqueDyn_algorithm
 - [ ] Day 24
     - [ ] Part 1
     - [ ] Part 2
