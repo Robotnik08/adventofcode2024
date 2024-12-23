@@ -1,0 +1,72 @@
+const input = read("input.txt")
+const lines = stringSplit(input, "\n")
+const connections = []
+do push(connections, stringSplit(l, "-")) for l in lines
+
+const graph = {}
+do {
+    set graph->(c#0) ??= []
+    set graph->(c#1) ??= []
+    do push(graph->(c#0), c#1)
+    do push(graph->(c#1), c#0) 
+} for c in connections
+
+define part1 () {
+    const cliques = []
+    do {
+        do {
+            do {
+                if b != c && indexOf(graph->(b), c) != -1 then {
+                    do push(cliques, [a, b, c])
+                }
+            } for c in graph->(a)
+        } for b in graph->(a)
+    } for a in keys(graph)
+
+    make amount_1 = 0
+    do {
+        if l#0 == 't' then {
+            set amount_1++ 
+            break 
+        } for l in c
+    } for c in cliques
+    do sayln(`Part 1: {amount_1 / 6}`)
+}
+
+define bron_kerbosch(R, P, X, cliques) {
+    if len(P) == 0 && len(X) == 0 then {
+        do push(cliques, R)
+        return
+    }
+
+    const pivot = selectPivot(P, X, graph)
+    const P_excluding_pivot_neighbors = difference(P, pivot)
+    
+    do {
+        const v = p
+        do bron_kerbosch(
+            removeDuplicates(R + [v]),
+            intersection(P, graph->(v)),
+            intersection(X, graph->(v)),
+            cliques
+        )
+        set P = difference(P, [v])
+        set X = removeDuplicates(X + [v])
+    } for p in P_excluding_pivot_neighbors
+}
+
+define selectPivot(P, X, graph) {
+    const candidates = removeDuplicates(P + X)
+    return reduce(candidates, array (a, b, _i) => { return len(a) > len(graph->(b)) ? a : graph->(b) }, [])
+}
+
+define part2 () {
+    const cliques = []
+    const nodes = keys(graph)
+    do bron_kerbosch([], nodes, [], cliques)
+    const largest_clique = reduce(cliques, array (a, b, _i) => { return len(a) > len(b) ? a : b }, [])
+    do sayln(`Part 2: {stringJoin(sort(largest_clique, stringCompare) |> reverse, ",")}`)
+}
+
+do part1()
+do part2()
