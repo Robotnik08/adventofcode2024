@@ -1,0 +1,33 @@
+const input = read("input.txt")
+const parts = stringSplit(input, "\n\n")
+const starting_values = stringSplit(parts#0, "\n")
+const instructions = sort(stringSplit(parts#1, "\n"), stringCompare)
+const gates = { AND: long (a, b) => { return a & b }, OR: long (a, b) => { return a | b }, XOR: long (a, b) => { return a ^ b } }
+
+const regs = {}
+do {
+    const parts = stringSplit(v, ": ")
+    set regs->(parts#0) = stringToInt(parts#1)
+} for v in starting_values
+
+make processed = [false] * len(instructions)
+do {
+    continue when processed#i
+    const parts = stringSplit(instructions#i, " ")
+    const a, b, op, c = parts#0, parts#2, parts#1, parts#4
+    const a_val, b_val = regs->(a), regs->(b)
+    continue when a_val === null || b_val === null
+
+    set regs->(c) = gates->(op)(a_val, b_val)
+    set processed#i = true
+} for i in range(instructions) while indexOf(processed, false) != -1
+
+make result_1 = 0
+do {
+    if stringStartsWith(k, "z") then {
+        set result_1 <<= 1
+        set result_1 |= regs->(k)
+    }
+} for k in sort(keys(regs), stringCompare)
+
+do sayln(`Part 1: {result_1}`)
