@@ -150,9 +150,13 @@ Thats it really. I hope you enjoy the solutions. Feel free to reach out to me if
         - Very simple, just a few loops
     - [x] Part 2
         - This was pretty difficult, I first used a plain Bron Kerbosch algorithm, but that was too slow, so I had to optimize it by using a pivot. https://en.wikipedia.org/wiki/MaxCliqueDyn_algorithm
-- [ ] Day 24
-    - [ ] Part 1
-    - [ ] Part 2
-- [ ] Day 25
-    - [ ] Part 1
-    - [ ] Part 2
+- [x] Day 24
+    - [x] Part 1
+        - This was pretty easy, it didn't take me long to solve and simulate the gates
+    - [x] Part 2
+        - Extremely hard, I had to graph out the gates and look for mistakes manually.
+- [x] Day 25
+    - [x] Part 1
+        - Super easy puzzle to end the year with
+    - [x] Part 2
+        - Merry Christmas!

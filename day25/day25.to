@@ -1,0 +1,32 @@
+const input = read("input.txt")
+const schems = stringSplit(input, "\n\n")
+
+const keyschems = []
+const lockschems = []
+
+do {
+    make split = stringSplit(s, "\n")
+    make schem = push(stringStartsWith(s, "#####") ? lockschems : keyschems, [0,0,0,0,0])#(-1)
+    do {
+        do {
+            if split#y#x == '#' then {
+                set schem#x++
+            }
+        } for x in range(5)
+    } for y in range(7)
+    set schem#i-- for i in range(5)
+} for s in schems
+
+make overlaps = 0
+
+do {
+    set overlaps++ unless testOverlap(k, l)
+} for l in lockschems for k in keyschems
+
+do sayln(`Part 1: {overlaps}`)
+
+
+define testOverlap (k, l) {
+    return true when k#i + l#i > 5 for i in range(5)
+    return false
+}
