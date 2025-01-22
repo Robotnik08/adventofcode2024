@@ -33,33 +33,33 @@ define runVm (registers, instructions) {
         const combo_operant = getComboOperant(operant, registers)
         set ip += 2
 
-        switch opcode => {
+        match opcode => {
             OpCode->adv => {
-                set registers#(Register->a) /= 2 ** combo_operant break
+                set registers#(Register->a) /= 2 ** combo_operant
             }
             OpCode->bxl => {
-                set registers#(Register->b) ^= operant break
+                set registers#(Register->b) ^= operant
             }
             OpCode->bst => {
-                set registers#(Register->b) = combo_operant % 8 break
+                set registers#(Register->b) = combo_operant % 8
             }
             OpCode->jnz => {
-                set ip = operant when registers#(Register->a) != 0 break
+                set ip = operant when registers#(Register->a) != 0
             }
             OpCode->bxc => {
-                set registers#(Register->b) ^= registers#(Register->c) break
+                set registers#(Register->b) ^= registers#(Register->c)
             }
             OpCode->out => {
-                do push(output, combo_operant % 8) break
+                do push(output, combo_operant % 8)
             }
             OpCode->bdv => {
-                set registers#(Register->b) = registers#(Register->a) / (2 ** combo_operant) break
+                set registers#(Register->b) = registers#(Register->a) / (2 ** combo_operant)
             }
             OpCode->cdv => {
-                set registers#(Register->c) = registers#(Register->a) / (2 ** combo_operant) break
+                set registers#(Register->c) = registers#(Register->a) / (2 ** combo_operant)
             }
             other => {
-                do sayln(`Unknown opcode: {opcode}`) break
+                do sayln(`Unknown opcode: {opcode}`)
             }
         }
 
