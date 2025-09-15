@@ -4,8 +4,8 @@ const parts = stringSplit(input, "\n\n")
 const rules, messages = stringSplit(parts#0, "\n"), stringSplit(parts#1, "\n")
 const page_rules, printed_pages = [], []
 
-do push(page_rules, map(stringSplit(r, "|"), long (v, i) => { return stringToInt(v) })) for r in rules
-do push(printed_pages, map(stringSplit(m, ","), long (v, i) => { return stringToInt(v) })) for m in messages
+do push(page_rules, map(stringSplit(r, "|"), stringToInt)) for r in rules
+do push(printed_pages, map(stringSplit(m, ","), stringToInt)) for m in messages
 
 const lookup = *([[false] * 100] * 100)
 set lookup#(pr#0)#(pr#1) = true for pr in page_rules
@@ -13,7 +13,7 @@ set lookup#(pr#0)#(pr#1) = true for pr in page_rules
 make amount, amount_2 = 0
 
 do {
-    const sorted = sort(*p, int (a, b) => { return lookup#a#b ? -1 : 0 })
+    const sorted = sort(*p, (a, b) => lookup#a#b ? -1 : 0)
 
     if sorted == p then {
         set amount += p#((len(p))/2)
